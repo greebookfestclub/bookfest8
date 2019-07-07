@@ -12,5 +12,5 @@ articlesの下に"名前.re"というファイルを作り、review形式で記�
 
 
 # build方法
-build-in-docker.shを実行すると、articles/ReVIEW-Template.pdfができます。
+build-in-docker.shを実行すると、articles/GREE-BookFest7.pdfができます。
 時間ができ次第、CircleCI対応します。
