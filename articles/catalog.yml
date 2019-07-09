@@ -3,7 +3,15 @@ PREDEF:
 
 CHAPS:
   - higuchi.re
-
+  - endo.re
+  - akiyama.re
+  - goto.re
+  - yazaki.re
+  - kishibata.re
+  - matsuzawa.re
+  - li.re
+  - saita.re
+  - ando.re
 APPENDIX:
 
 POSTDEF:
