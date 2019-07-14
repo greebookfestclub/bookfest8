@@ -71,4 +71,12 @@ githubアカウントを教えていただければownerに追加します。
 まだ調べていません。これから調べて書きます。
 
 == CI/CD環境
-まだ出来ていません。これから作って書きます。
+Circle CIを利用しています。
+まず、1文字でも変更して、Pull Requestを作ってください。
+すると、自動でCircleCIのBuildが走ります。
+下記画面のDetailを押下し、遷移したCircleCIの画面で、"Artifacts"タブを押下します。
+すると、GREE-BookFest7.pdfというリンクが表示されるため、
+それを押下するとPullRequestの内容を含むPDFを確認できます。
+確認して問題なければ、mergeしてください。
+
+//indepimage[circleci]
