@@ -4,6 +4,7 @@ PREDEF:
 CHAPS:
   - higuchi.re
   - endo.re
+  - endo2.re
   - akiyama.re
   - goto.re
   - yazaki.re
