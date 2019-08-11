@@ -3,6 +3,7 @@ PREDEF:
 
 CHAPS:
   - higuchi.re
+  - higuchi2.re
   - endo.re
   - akiyama.re
   - goto.re
