@@ -1,2 +1,2 @@
 
-= 章のタイトル
+= Android tips
