@@ -2,7 +2,6 @@ PREDEF:
   - preface.re
 
 CHAPS:
-  - higuchi.re
   - higuchi2.re
   - endo.re
   - endo2.re
@@ -15,8 +14,10 @@ CHAPS:
   - saita.re
   - sasaki.re
   - ando.re
-  - kishibata.re
+
 APPENDIX:
+  - higuchi.re
 
 POSTDEF:
+  - bib.re
   - contributors.re
