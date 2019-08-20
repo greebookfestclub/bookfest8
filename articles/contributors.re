@@ -1,4 +1,5 @@
 = 著者紹介
 
-==== 第1章 樋口雅拓 / @mahiguch1
+==== 樋口雅拓 / @<href>{https://twitter.com/mahiguch1,@mahiguch1} (@<chap>{higuchi2}, @<chap>{higuchi})
+
 グリーグループのリミア株式会社で、LIMIAというアプリを作っています。
