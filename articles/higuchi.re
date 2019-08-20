@@ -1,10 +1,24 @@
 
 = この本の作り方
 
-== Build環境
+ここでは、この本を執筆する方に対して、本の書き方の説明をします。
+次回以降も同様の手順で制作予定のため、参加される方はご確認いただけると助かります。
 
 印刷所へはPDFで納品します。
-まずは、ここにあるテキストを手元のPCでBuildして、PDF形式で出力します。
+そこで、CircleCIを使ったPDF作成方法について説明します。
+まず、1文字でも変更して、Pull Requestを作ってください。
+すると、自動でCircleCIのBuildが走ります。
+下記画面のDetailを押下し、遷移したCircleCIの画面で、"Artifacts"タブを押下します。
+すると、GREE-BookFest7.pdfというリンクが表示されます。
+それを押下するとPullRequestの内容を含むPDFを確認できます。
+確認して問題なければ、mergeしてください。
+
+//indepimage[circleci]
+
+== Build環境
+
+CircleCIでのbuildは簡単ですが、Pull Requestを作るまで結果を確認できません。
+手元で結果を確認しながら執筆できるように、環境構築する方法を以下に示します。
 
 === install docker desktop for mac
 
@@ -78,16 +92,13 @@ githubアカウントを教えていただければownerに追加します。
 
 == 表紙の作り方
 
-まだ調べていません。これから調べて書きます。
+印刷所からテンプレートを取得可能です。
+今回はB5版で出版予定のため、そのテンプレートを取得します。
 
-== CI/CD環境
+ * テンプレート: @<href>{http://www.nikko-pc.com/offset/template/tonbo.html}
 
-Circle CIを利用しています。
-まず、1文字でも変更して、Pull Requestを作ってください。
-すると、自動でCircleCIのBuildが走ります。
-下記画面のDetailを押下し、遷移したCircleCIの画面で、"Artifacts"タブを押下します。
-すると、GREE-BookFest7.pdfというリンクが表示されるため、
-それを押下するとPullRequestの内容を含むPDFを確認できます。
-確認して問題なければ、mergeしてください。
-
-//indepimage[circleci]
+表紙には背幅を含める必要があります。
+背幅は紙の厚さとページ数に依存します。
+上質紙(0.05mm/ページ)で、50ページを想定しています。
+つまり、背幅は2.5mmとなります。
+また、表紙のみカラーでの印刷を行います。
