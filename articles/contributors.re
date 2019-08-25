@@ -6,5 +6,4 @@
 
 ==== 遠藤辰弥 / @<href>{https://twitter.com/tattyamm,@tattyamm} (@<chap>{endo}, @<chap>{endo2})
 
-スマホ向けアプリ共通システムのサーバーサードを担当。
-
+スマホ向けアプリ共通システムのサーバーサードを担当。
