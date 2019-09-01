@@ -9,3 +9,13 @@
 ==== 遠藤辰弥 / @<href>{https://twitter.com/tattyamm,@tattyamm} (@<chap>{endo}, @<chap>{endo2})
 
 スマホ向けアプリ共通システムのサーバーサードを担当。
+
+==== 李 (@<chap>{li})
+
+グリーインフラ部に所属しています。
+普段はRDBMSとMonitoring関連の仕事をやっていますが、興味でGOの開発もやっています。
+最近の趣味はMicroServicesと分散システムで、JWTの認証サーバを作ったり、gRPCを触ったりしています。
+
+==== 佐々木 (@<chap>{sasaki})
+
+==== 安藤 (@<chap>{ando})
