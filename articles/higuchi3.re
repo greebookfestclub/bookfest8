@@ -58,8 +58,8 @@ RUN apk add --no-cache libc6-compat python py2-pip coreutils tzdata && \
 
 RUN pip install awscli
 
-RUN wget -q https://dl.embulk.org/embulk-latest.jar -O /usr/local/bin/embulk && \
-  chmod +x /usr/local/bin/embulk
+RUN wget -q https://dl.embulk.org/embulk-latest.jar -O /usr/local/bin/embulk \
+   && chmod +x /usr/local/bin/embulk
 
 RUN /usr/local/bin/embulk gem install embulk-input-mysql && \
   /usr/local/bin/embulk gem install embulk-input-s3 && \
@@ -81,11 +81,15 @@ ENTRYPOINT ["/entrypoint.sh"]
   #!/bin/sh
 
   decrypt() {
-      aws kms decrypt --ciphertext-blob fileb:///etc/embulk/blob/${LIMIA_ENV}-bigquery-service-account.blob --output text --query Plaintext | base64 -d > /etc/bigquery_service_account.json
+      aws kms decrypt --ciphertext-blob \
+      fileb:///etc/embulk/blob/bigquery-service-account.blob \
+      --output text --query Plaintext \
+      | base64 -d > /etc/bigquery_service_account.json
   }
 
   process_tables() {
-      ls /etc/embulk/tables/*.yml.liquid | xargs -n1 java -jar /usr/local/bin/embulk run 2>&1
+      ls /etc/embulk/tables/*.yml.liquid \
+      | xargs -n1 java -jar /usr/local/bin/embulk run 2>&1
   }
 
   process_specified() {
@@ -96,7 +100,8 @@ ENTRYPOINT ["/entrypoint.sh"]
       for var in $@; do
           if [ -f /etc/embulk/tables/${var}.yml.liquid ]; then
               echo "/etc/embulk/tables/${var}.yml.liquid"
-              ls /etc/embulk/tables/${var}.yml.liquid | xargs -n1 java -jar /usr/local/bin/embulk run 2>&1
+              ls /etc/embulk/tables/${var}.yml.liquid \
+              | xargs -n1 java -jar /usr/local/bin/embulk run 2>&1
           fi
           if [ -e /etc/embulk/scripts/${var}.sh ]; then
               echo "/etc/embulk/scripts/${var}.sh"
@@ -106,15 +111,6 @@ ENTRYPOINT ["/entrypoint.sh"]
   }
 
   init() {
-      if [ -z "${GCP_PROJECT_ID}" ]; then
-        echo no GCP_PROJECT_ID
-        exit
-      fi
-      if [ -z "${LIMIA_ENV}" ]; then
-        echo no LIMIA_ENV
-        exit
-      fi
-
       decrypt
 
       if [ $# -eq 0 ]; then
@@ -127,6 +123,11 @@ ENTRYPOINT ["/entrypoint.sh"]
   init "$@"
 //}
 
+Dockerfileで足元に暗号化済みのService Accountファイルをコピーしておき、
+3行目からのdecrypt()で平文に戻しています。
+45行目で引数の判定を行い、引数が空なら全テーブルを転送しています。
+引数が指定されていた場合、引数と同じ名前の設定ファイルもしくはscriptを実行します。
+
 次にentrypointから呼ばれるembulkのshell scriptを示します。
 まずは、CloudFrontアクセスログについてです。
 CloudFrontのログは、/cf-logs/直下に追加されていきます。
@@ -135,12 +136,17 @@ CloudFrontのログは、/cf-logs/直下に追加されていきます。
 
 //listnum[access-log-cloudfront-p-limia-jp.sh][access-log-cloudfront-p-limia-jp.sh][sh]{
 #!/bin/sh
-aws s3 sync s3://log-bucket/cf-logs/ /tmp/access-log-cloudfront-p-limia-jp/ --exclude "*" --include "*.`date --date '1 day ago' +%Y-%m-%d`-*" --quiet
-java -jar /usr/local/bin/embulk run /etc/embulk/logs/access-log-cloudfront-p-limia-jp.yml.liquid 2>&1
+aws s3 sync s3://log-bucket/cf-logs/ /tmp/access-log-cloudfront-p-limia-jp/ \
+--exclude "*" --include "*.`date --date '1 day ago' +%Y-%m-%d`-*" --quiet
+java -jar /usr/local/bin/embulk run \
+/etc/embulk/logs/access-log-cloudfront-p-limia-jp.yml.liquid 2>&1
 rm -rf /tmp/access-log-cloudfront-p-limia-jp/
 //}
 
 スクリプトから呼ばれるembulk設定ファイルを以下に示します。
+既にログファイルは手元に転送されているため、fileモジュールを使って読み取ります。
+前日分のデータを読み込んでいるため、出力先のBigQueryのテーブル名も前日の日付としたいです。
+そこで、53行目で前日の日付を計算して設定しています。
 
 //listnum[access-log-cloudfront-p-limia-jp.yml.liquid][access-log-cloudfront-p-limia-jp.yml.liquid][yml]{
   in:
@@ -239,12 +245,15 @@ CloudFrontと仕組みを合わせるため、同様にファイルを手元に�
 
 //listnum[access-log-elb-main.yml.liquid][access-log-elb-main.yml.liquid][yml]{
 #!/bin/sh
-aws s3 sync s3://log-bucket/AWSLogs/AccountId/elasticloadbalancing/ap-northeast-1/`date --date '1 day ago' +%Y/%m/%d`/ /tmp/access-log-elb-main/ --quiet
-java -jar /usr/local/bin/embulk run /etc/embulk/logs/access-log-elb-main.yml.liquid 2>&1
+aws s3 sync s3://bucket/AWSLogs/AccountId/elasticloadbalancing/ap-northeast-1/\
+`date --date '1 day ago' +%Y/%m/%d`/ /tmp/access-log-elb-main/ --quiet
+java -jar /usr/local/bin/embulk run \
+/etc/embulk/logs/access-log-elb-main.yml.liquid 2>&1
 rm -rf /tmp/access-log-elb-main/
 //}
 
 embulk設定は、次のようになります。
+Schema定義が異なるだけで、それ以外はCloudFrontと同じです。
 
 //listnum[access-log-elb-main.yml.liquid][access-log-elb-main.yml.liquid][yml]{
   in:
@@ -342,20 +351,11 @@ BigQuery Schema定義は、次のようになります。
       host: {{ env.LIMIA_DB_HOST_MAIN }}
       database: fily_user
       table: user
-      select: id,alias,mail,nick_name,company_name,jobs,zip_code,prefecture_code,city_code,address1,address2,telephone,register_status,mail_status,patrol_status,affiliate_status,receive_newsletter,receive_review,receive_new_contents,receive_activity,receive_ranking,deleted,created_at,updated_at
+      select: "*"
       options: {useLegacyDatetimeCode: false, serverTimezone: Asia/Tokyo}
       default_timezone: "Asia/Tokyo"
       column_options:
           register_status: { value_type: long, type: long }
-          mail_status: { value_type: long, type: long }
-          patrol_status: { value_type: long, type: long }
-          affiliate_status: { value_type: long, type: long }
-          receive_newsletter: { value_type: long, type: long }
-          receive_review: { value_type: long, type: long }
-          receive_new_contents: { value_type: long, type: long }
-          receive_activity: { value_type: long, type: long }
-          receive_ranking: { value_type: long, type: long }
-          prefecture_code: { value_type: long, type: long }
       parser:
           type: json
   out:
@@ -376,33 +376,17 @@ BigQuery Schema定義は、次のようになります。
           - {type: gzip}
 //}
 
-MySQLのHostname、UserおよびPasswordを環境変数から渡しています。
-
+3,4,5行目で、MySQLのHostname、UserおよびPasswordを環境変数から渡しています。
+embulkはtinyint(1)のカラムをbooleanと判定してしまいます。
+booleanと判定されたくない場合、12行目のようにcolumn_optionsで型を指定します。
 次にBigQueryのSchemaを示します。
 
 //listnum[user.json][user.json][yml]{
   [
       {"name":"id", "type":"integer", "mode": "required"},
       {"name":"alias", "type":"string", "mode": "required"},
-      {"name":"mail", "type":"string", "mode": "nullable"},
       {"name":"nick_name", "type":"string", "mode": "nullable"},
-      {"name":"company_name", "type":"string", "mode": "nullable"},
-      {"name":"jobs", "type":"string", "mode": "nullable"},
-      {"name":"zip_code", "type":"integer", "mode": "nullable"},
-      {"name":"prefecture_code", "type":"integer", "mode": "nullable"},
-      {"name":"city_code", "type":"integer", "mode": "nullable"},
-      {"name":"address1", "type":"string", "mode": "nullable"},
-      {"name":"address2", "type":"string", "mode": "nullable"},
-      {"name":"telephone", "type":"string", "mode": "nullable"},
       {"name":"register_status", "type":"integer", "mode": "required"},
-      {"name":"mail_status", "type":"integer", "mode": "required"},
-      {"name":"patrol_status", "type":"integer", "mode": "required"},
-      {"name":"affiliate_status", "type":"integer", "mode": "required"},
-      {"name":"receive_newsletter", "type":"integer", "mode": "required"},
-      {"name":"receive_review", "type":"integer", "mode": "required"},
-      {"name":"receive_new_contents", "type":"integer", "mode": "required"},
-      {"name":"receive_activity", "type":"integer", "mode": "required"},
-      {"name":"receive_ranking", "type":"integer", "mode": "required"},
       {"name":"deleted", "type":"boolean", "mode": "required"},
       {"name":"created_at", "type":"timestamp", "mode": "required"},
       {"name":"updated_at", "type":"timestamp", "mode": "required"}
@@ -410,6 +394,8 @@ MySQLのHostname、UserおよびPasswordを環境変数から渡しています�
 //}
 
 次にDynamoDBの転送設定を示します。
+DynamoDBもMySQLと同様に転送できます。
+ただし、構造を持ったデータを扱う場合、json文字列として扱います。
 
 //listnum[ranking_searchword.yml.liquid][ranking_searchword.yml.liquid][yml]{
   in:
@@ -496,7 +482,6 @@ LIMIAではCloud Functionsにcallback endpointを作りました。
 
       const datasetId = 'grows';
 
-      // schema: idfa:string, idfv:string, gps_adid:string, is_reattributed:integer, deeplink:string, network_name:string, campaign_name:string, adgroup_name:string, creative_name:string, activity_kind:string, created_at_milli:integer, cost_type:string, cost_amount:string, cost_currency:string, reporting_cost:string
       const tableId = 'adjust';
 
       const bigQuery = new BigQuery({
@@ -572,7 +557,7 @@ function prepare(){
 
   if (typeof apps === "undefined") {
     apps = {
-      PHOTO: { appid: xxx, name: "xxxx", token: "xxxx" } // kintoneのアプリ情報を設定
+      PHOTO: { appid: xxx, name: "xxxx", token: "xxxx" } // kintoneのアプリ情報
     };
   }
 
@@ -641,4 +626,5 @@ function getKintoneRecords(apps_key_name,kintone_manager){
 BigQueryにデータを集約することで、SQLさえ書ければ分析可能となりました。
 分析する人が増えたので、ユーザやアイテムへの理解が進み、最適化が可能となりました。
 しかし、データやツールが増える度に対応しなければならず、そこに時間がかかっています。
+まだまだ改良の余地は大きいと思いますので、アドバイスいただけると助かります。
 今後はメンテナンス不要の仕組みを構築することにより、ユーザ体験の向上を推進したいと思います。
