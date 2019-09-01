@@ -34,13 +34,13 @@
 外形監視業界では、代表的なサービスはPingdomがあります。
 Pingdomはたくさんの機能を搭載しているプラットホームです。監視以外アラート通知やサイトパフォーマンス分析など豊かな機能があります。
 AWSやGCP（stackdriver）などパブリッククラウドにも外形監視のサービスがあります。
-いろいろな外形監視サービスがあると思いますが、基本的にhttp/https/ping監視のベース機能が入っていますので、
+色々な外形監視サービスがあると思いますが、基本的にhttp/https/ping監視のベース機能が入っていますので、
 自分の要件を合わせて適切なサービスを選択するのがいいと思います。
 
 === UptimeRobot
 今回特に紹介したいのはUptimeRobotというサービスになります。
 UptimeRobotはhttp/ping/port/keyword４つの監視タイプをサポートしています。（https監視もhttpタイプとなります）
-UptimeRobotはAPI@<fn>{lifn01}から監視の設定することができるので、いろんなカスタマイズな運用ができます。
+UptimeRobotはAPI@<fn>{lifn01}から監視の設定することができるので、カスタマイズな運用ができます。
 //footnote[lifn01][https://uptimerobot.com/api]
 
 さらに、UptimeRobotは無料で50モニタを設定することができるので、検証したい・すぐ使いたい方にはすごく便利なサービスだと思います。
@@ -67,7 +67,7 @@ GUIに通らず、コードを書く・更新でインフラの構築や修正�
 この後、IaCツールを使ってUptimeRobotに監視モニターを設定するサンプルを紹介します。
 
 == Terraform
-いろんなIaCツールがありますが、たとえばAWSのCloudFormation、ここではTerraformを使います。
+IaCツールは色々ありますが、たとえばAWSのCloudFormation、ここではTerraformを使います。
 TerraformはHashiCorp社で開発したIaCツールです。
 一番の特徴はクロスプラットホームで、公式的にAWS,GCPなど主流なクラウドをサポートしていますが、
 APIがあれば、Terraformのproviderを書けば、Terraformを使えることができます。
@@ -136,8 +136,8 @@ terraformコマンドを実行します。
 
 == Jenkinsの設定
 Terraformを使ってUptimeRobotの設定をコード化にできました。コードがあれば自動化ができます！
-TerraformをベースでさらにCI/CDツールを使ってコードだけ書けば自動で適用してくれる仕組みを作っています。
-今回のDemoはJenkinsを利用します。
+TerraformをベースでさらにCI/CDツールを使ってコードだけ書けば自動で適用されることができます。
+Jenkinsを利用してUptimeRobotの自動管理のDemoを作っていきたいと思います。
 
 Jenkinsをbuildしやすいため、DockerでbuildできるようにDockerfileを作成しています。
 //listnum[Dockerfile][Dockerfile][hcl]{
