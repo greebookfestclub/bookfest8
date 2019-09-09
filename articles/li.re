@@ -95,7 +95,8 @@ APIがあれば、Terraformのproviderを書けば、Terraformを使えること
 
 まずTerraformをダウンロードします。（Providerの原因で0.11.xxを使います）
 //cmd{
-~$ wget https://releases.hashicorp.com/terraform/0.11.14/terraform_0.11.14_darwin_amd64.zip
+~$ wget https://releases.hashicorp.com/terraform/0.11.14/\
+terraform_0.11.14_darwin_amd64.zip
 ~$ tar xvf terraform_0.11.14_darwin_amd64.zip
 ~$ mv terraform /usr/bin/terraform
 //}
@@ -152,10 +153,12 @@ RUN set -eux; \
 	\
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
-		amd64) url="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_386.zip" ;; \
+		amd64) url="https://releases.hashicorp.com/terraform/\
+    ${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_386.zip" ;; \
 	esac; \
 	\
-  wget -q ${url} && unzip terraform_${TERRAFORM_VERSION}_linux_386.zip && mv terraform /usr/bin/terraform
+  wget -q ${url} && unzip terraform_${TERRAFORM_VERSION}_linux_386.zip \
+  && mv terraform /usr/bin/terraform
 
 WORKDIR /uptimerobot
 
@@ -170,8 +173,9 @@ Dockerfileをbuild/runするためのbuild.sh
 set -e
 API_KEY="xxxx"
 TERRAFORM_VERSION="0.11.14"
-docker build -t uptimerobot-terraform --build-arg TERRAFORM_VERSION=$TERRAFORM_VERSION .
-docker run -v ${PWD}:/uptimerobot -e API_KEY=$API_KEY uptimerobot-terraform 
+docker build -t uptimerobot-terraform --build-arg \
+TERRAFORM_VERSION=$TERRAFORM_VERSION .
+docker run -v ${PWD}:/uptimerobot -e API_KEY=$API_KEY uptimerobot-terraform
 //}
 詳細は次のリポジトリを参考してください。
 https://github.com/leeif/terraform-uptimerobot-jenkins-demo
