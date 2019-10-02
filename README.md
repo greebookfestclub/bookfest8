@@ -1,4 +1,4 @@
-技術書典7へ向けた執筆用repositoryです。
+技術書典8へ向けた執筆用repositoryです。
 TechBoosterさんのTemplateを元に作成しています。
 TechBoosterさん、ありがとうございます。
 
@@ -11,7 +11,7 @@ articlesの下に"名前.re"というファイルを作り、review形式で記�
 * review形式説明: https://github.com/kmuto/review/blob/master/doc/format.ja.md
 
 # build方法
-build-in-docker.shを実行すると、articles/GREE-BookFest7.pdfができます。
+build-in-docker.shを実行すると、articles/GREE-BookFest8.pdfができます。
 また、PullRequestを作るとCircleCIでBuildされます。
 
 # review形式が苦手な方へ
