@@ -2,8 +2,13 @@
 
 == VTuberライブエンタメ技術に求められる研究開発
 
-=== SIGGRAPH Real Time Live!について
+=== SIGGRAPH Real-Time Live!について
 
+SIGGRAPH Real-Time Live!とは、SIGGRAPH内で開催されるリアルタイムのライブデモセッションである。
+SIGGRAPH自体がACM(Association for Computing Machinery, ニューヨークに本部のある計算機科学の国際学会)のコンピュータグラフィックスとインタラクション技術のSIG(Special Interst Group)なのと、
+1973年から続く歴史も規模も大きな国際会議なので「世界最大のコンピュータグラフィックスとインタラクション技術における国際会議」と呼んでよいと思う。
+
+@<href>{https://www.siggraph.org/}
 
 == Virtual CastとVCI
 
