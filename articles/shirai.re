@@ -11,7 +11,7 @@
 
 === 実現したい機能
 
-//image[SA19RTL-map]
+//image[SA19RTL-map][東京と開催地のオーストラリア・ブリスベンは7,154km離れている。そしてVirtual Castの推奨環境は4K動画並み。]
 
 
 === node.js 
