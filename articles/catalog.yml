@@ -4,7 +4,6 @@ PREDEF:
 CHAPS:
   - higuchi.re
   - endo.re
-  - mizuno.re
 
 APPENDIX:
   - appendix.re
