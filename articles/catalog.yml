@@ -2,8 +2,8 @@ PREDEF:
   - preface.re
 
 CHAPS:
-  - higuchi.re
   - endo.re
+  - higuchi2.re
   - shirai.re
   - mizuno.re
 
