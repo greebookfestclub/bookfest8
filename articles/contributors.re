@@ -9,3 +9,8 @@
 ==== 遠藤辰弥 / @<href>{https://twitter.com/tattyamm,@tattyamm} (@<chap>{endo})
 
 スマホ向けアプリ共通システムのサーバーサイドを担当。
+
+
+==== 白井暁彦 / @<href>{https://twitter.com/o_ob,@o_ob} (@<chap>{shirai})
+
+GREE VR Studio Lab, Director
