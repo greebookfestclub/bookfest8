@@ -19,21 +19,19 @@ WFLEが開発するVTuber専用ライブ配信プラットフォーム「REALITY
 //image[WFLEPT-GVRS][WFLE PTとGREE VR Studioの位置づけ]
 
 具体的には長期スパンのR&D、知財創出、アライアンス、新技術の調査選定、国際展開、普及啓蒙事業、社会実装を通した実験などがあります。
-（本稿で扱いませんが）アバターの教育向け応用（引用@<bib>{RexIVA}）や、千葉大教育学部付属小学校でのVTuberを使った実験授業 @<bib>{CSR20190322}、また新技術の開発系では無料ボイチェンサービス「転声こえうらない」（@<href>{https://vr.gree.net/lab/vc/}）のリリースや、ライブエンターテインメントの研究所らしくYouTubeチャンネル @<href>{http://j.mp/VRSYT} でもライブイベントや資料映像を発信しておりますので、ご興味ありましたらご購読いただけると幸いです。
+（本稿で扱いませんが）千葉大教育学部付属小学校でのVTuberを使った実験授業 @<bib>{CSR20190322}や、大学でのプログラミング講義向けアバターの教育向け応用（引用@<bib>{RexIVA}）、また新技術の開発系では無料ボイチェンサービス「転声こえうらない」（@<href>{https://vr.gree.net/lab/vc/}）のリリースや、ライブエンターテインメントの研究所らしくTwitter@<href>{https://twitter.com/vrstudiolab,@VRStudioLab}やYouTubeチャンネル @<href>{http://j.mp/VRSYT} でもライブイベントや資料映像を発信しております、SlideShareでも資料を公開しておりますので（@<href>{https://www.slideshare.net/vrstudiolab/}）、ご興味ありましたらご購読いただけると幸いです。
 
 === SIGGRAPH Real-Time Live!について
 
-さて、本稿ではVTuber技術、特に次世代型のライブエンターテインメントで使えそうな技術について紹介します。
-2019年11月にオーストラリアと日本を接続して実施した「SIGGRAPH Real-Time Live!」について、構成する技術について紹介していきます。
+本稿ではVTuber技術、特に次世代型のライブエンターテインメントで使えそうな技術や裏話について紹介していきたいと思います。
+特に2019年11月にオーストラリアと日本を接続して実施した「SIGGRAPH Real-Time Live!」について、構成する技術について紹介していきます。
 
 SIGGRAPH Real-Time Live!とは、SIGGRAPH内で開催されるリアルタイムのライブデモセッションです。
 そもそも「SIGGRAPH」は ACM（Association for Computing Machinery, ニューヨークに本部のある計算機科学の国際学会）の分科会
 「Special Interest Group on Computer GRAPHics」の略で、発足は1967年、カンファレンスとしては1974年から続く長い歴史を持ちます。
-参加者規模も2万人～4万人といったも大きな国際会議なので「世界最大のコンピュータグラフィックスとインタラクション技術における国際会議」と呼んでよいと思います。
+参加者規模も2万人～4万人といったも大きな国際会議なので「世界最大のコンピュータグラフィックスとインタラクション技術における国際会議」と呼んでよいと思います（@<href>{https://www.siggraph.org/}）。
 
-@<href>{https://www.siggraph.org/}
-
-年に一度の大会、夏は北米で7月ごろ開催されます。特に2年に一度はロサンゼルスで開催しています。
+SIGGRAPH年に一度の大会は、夏は北米で7月ごろ開催されます。特に2年に一度はロサンゼルスで開催しています。
 ハリウッドの映画産業を擁するロサンゼルスでの開催が参加者にとっても便利ですし、カルフォルニア州による誘致の働きかけもあるそうです。
 SIGGRAPH自体の参加者数は近年20,000人規模で推移していますが、やはりロサンゼルスでの開催がもっとも参加者が多いです。
 かつてのピークから半減した理由のひとつとして、2008年からは冬場にSIGGRAPH Asia（以下、SA）として、アジアでの開催がされております。
@@ -56,21 +54,37 @@ NVIDIAのようなGPUメーカーのR&D成果の発表や研究者による技�
 一方で、来場者が歓声をあげたり拍手したり、といった反応もライブで感じられる注目のセッションです。
 
 === GREE VR Studio Lab の挑戦（SA18RTL）
-2018年の東京、SA18RTLは東京国際フォーラム「Hall C」という客席1,500人のホールで開催されました。この回ははじめてのSAにおけるRTLでしたので、上演プログラムは公募ベースではなくチェア（Luminous Productions／スクウェア・エニックス・長谷川勇 氏）による推薦ベースで実施されました。
-そこでGREE VR Studio Labははじめてのリアルタイムライブデモ「“REALITY: Be yourself you want to be” VTuber and presence technologies in live entertainment which can make interact between smartphone and virtual live characters（REALITY：「なりたい自分になる」スマートフォンとバーチャルライブキャラクター間でやり取りできるVTuberとライブエンターテイメントのプレゼンス技術）」を発表しました @<bib>{SA18RTL}。
-この発表はVR Studio LabとWFLEに加えて、ニュージーランドでモーションセンサーに仕える新素材を開発しているStretchSense社と、イギリスでソフトウェアによるモーションキャプチャー補完ミドルウェアを開発しているIKINEMA社と共同で実施しました。シナリオはすべて日本語＋英語バイリンガルで構築し、表情モーションキャプチャー、StretchSense社によるグローブ、UnrealEngine4による統合されたリアルタイムキャラクターアニメーションと、IKINEMA社による女性アクターと、リアルタイム・アニメーション・クリーニング・パイプライン、さらに新規でキャラクターもデザインし、ダンスシーンもあり、けっこう大変でしたが得るものも大きな挑戦でした。
+2018年の東京、SA18RTLは東京国際フォーラム「Hall C」という客席1,500人のホールで開催されました。この回ははじめてのSAにおけるRTLでしたので、上演プログラムは公募ベースではなくチェア（長谷川勇 氏，Luminous Productions／スクウェア・エニックス）による推薦ベースで実施されました。
+日本からはスクエニやバンナムさんがR&D成果として、リアルタイムグラフィックスやAIによる対話的アニメーションのデモをする中、
+GREE VR Studio Labは、はじめてのリアルタイムライブデモ「“REALITY: Be yourself you want to be” VTuber and presence technologies in live entertainment which can make interact between smartphone and virtual live characters（REALITY：「なりたい自分で生きていく」スマートフォンとバーチャルライブキャラクター間でやり取りできるVTuberとライブエンターテイメントのプレゼンス技術）」を発表しました @<bib>{SA18RTL}。
+この発表はVR Studio LabとWFLEに加えて、ニュージーランドでモーションセンサーに仕える新素材を開発しているStretchSense社と、イギリスでソフトウェアによるモーションキャプチャー補完ミドルウェアを開発しているIKINEMA社と共同で実施しました。シナリオはすべて日本語＋英語バイリンガルで構築し、ラボディレクターである白井が今居＝リアリテ＝レアというキャラクターを演じ、iPhoneXによる表情モーションキャプチャーと特殊表情の可能性@<bib>{CCSE2019}、StretchSense社によるグローブ、UnrealEngine4による統合されたリアルタイムキャラクターアニメーションと、IKINEMA社による女性アクターと、リアルタイム・アニメーション・クリーニング・パイプライン、さらに新規でキャラクター「IKINEMA Aya」もデザインし、ダンスシーンもあり、けっこう大変でしたが得るものも大きな挑戦でした。
 海外メディアからも取材や事後レポートがあり、現在もVR Studio LabのYouTubeでは人気のコンテンツになっています（@<href>{https://www.youtube.com/watch?v=zj2fe4A87GA}）。
 なお、IKINEMA社は本件に関してプレスリリースを発行しています@<bib>{SA18RTL-IKINEMA}、しかしその半年後にはAppleに買収されてしまいましたので、世の中なかなかうまくいかないなあというところです。
 
+#@# 2つの画像を合体させる予定
 //image[SA18-2355][SIGGRAPH ASIA 2018 TokyoでのReal-Time Live!の様子（SA公式提供）][scale=0.5]{
 //}
 
 =={a-label} Virtual CastとHapbeatを使った国際双方向アバター触覚ライブの開発
 
-SA19RTLにおいては
-https://sa2019.siggraph.org/attend/real-time-live/session/111
+SA18RTLに続き、夏のSIGGRAPH2019においては、世界でのVTuber業界を再定義するべく「Virtual Beings World」というイベントを主催しました。
+この中でGREE VR Studio Labは「World VTuber Showcase」というティザー動画コンテスト（@<href>{http://j.mp/WVS19}）を開催し、世界中から集まった22作の中からNTTドコモ「直感×アルゴリズム♪」をグランプリとして選出、VTuber文化のアンバサダーになれる権利として任命し、2019年11月にオーストラリアで開催されるSA19RTLにおけるコラボレーションのきっかけになりました@<bib>{VRON20190809}。
+
+//image[S18VBW][SIGGRAPH 2018 で開催した「Virtual Beings World」の様子]{
+//}
+
+以上のような経緯から、SA19RTLにおいては、NTTドコモ副島義貴Pとイクスアール株式会社COO小池健輔氏、そしてVR Studio Labのインターンであり、東京工業大学発ベンチャー企業「Hapbeat合同会社」の代表でもある山崎勇祐さんと共著する形で企画提案をエントリーし、採択されました（@<href>{https://sa2019.siggraph.org/attend/real-time-live/session/111}）@<bib>{VRON20191119}。
+タイトルは「Global Bidirectional Remote Haptic Live Entertainment by Virtual Beings (VTuberによるグローバルな双方向触覚ライブ)」で、「生アニメ」として人気の「直感アルゴリズム」とコラボすることになりました。
+最終的なキャストとしては「直感アルゴリズム」のKilinさん（法元明菜さん）＆Xiさん（岩井映美里さん）が日本語と中国語を担当、そして英語担当として先述のWorld VTuber Showcaseでご縁のあった「お米アイドルMaiプリンセス」からミルキークイーンさんが参加することとなりました。
+
+
+//image[SA19RTL-keyvisual][NTTドコモ副島Pのご協力により制作したキービジュアル]
 
 === 実現したい機能
+#@# https://docs.google.com/presentation/d/1IosX_76FQ8Fi4ewnXgXh5uGrb83492zZMgIc7kjINuc/edit#slide=id.p6
+#@# https://docs.google.com/presentation/d/1MnfQwyAcq4JnD1lZKzVyksAS9ieWsNxJvo6msbVW-KQ/edit#slide=id.g78f914e51a_1_0
+#@# https://twitter.com/o_ob/status/1193913152716460033
+VTuberによるグローバルな双方向触覚ライブ国際双方向触覚ライブ実験します
 
 //image[SA19RTL-map][東京と開催地のオーストラリア・ブリスベンは7,154km離れている。そしてVirtual Castの推奨環境は4K動画並み。]
 
@@ -98,6 +112,7 @@ https://sa2019.siggraph.org/attend/real-time-live/session/111
 === 機材がクソ重い
 === 音声品質と遠のくゴール
 === 不測のトラブル
+#@# Matt AI - Speech Driven Digital Human with Emotions http://sa2019.conference-program.com/presentation/?id=real_106&sess=sess230 Jingxiang Li, et al. Tencent Technology Company Limited
 
 == 今後に向けて
 === フィードバック
