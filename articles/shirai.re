@@ -19,10 +19,12 @@ WFLEが開発するVTuber専用ライブ配信プラットフォーム「REALITY
 //image[WFLEPT-GVRS][WFLE PTとGREE VR Studioの位置づけ]
 
 具体的には長期スパンのR&D、知財創出、アライアンス、新技術の調査選定、国際展開、普及啓蒙事業、社会実装を通した実験などがあります。
-2019年は、アバターの教育向け応用（引用@<bib>{RexIVA}）や、無料ボイチェンサービス「転声こえうらない」@<href>{https://vr.gree.net/lab/vc/}や、YouTubeチャンネルもありまして、 YouTube@<href>{http://j.mp/VRSYT}でも映像資料として発信しておりますので、ご購読いただけると幸いです。
-
+（本稿で扱いませんが）アバターの教育向け応用（引用@<bib>{RexIVA}）や、千葉大教育学部付属小学校でのVTuberを使った実験授業（引用@<bib>{CSR20190322}）、また新技術の開発系では無料ボイチェンサービス「転声こえうらない」（@<href>{https://vr.gree.net/lab/vc/}）のリリースや、ライブエンターテインメントの研究所らしくYouTubeチャンネル（@<href>{http://j.mp/VRSYT}）でもライブイベントや資料映像を発信しておりますので、ご興味ありましたらご購読いただけると幸いです。
 
 === SIGGRAPH Real-Time Live!について
+
+さて、本稿ではVTuber技術、特に次世代型のライブエンターテインメントで使えそうな技術について紹介します。
+2019年11月にオーストラリアと日本を接続して実施した「SIGGRAPH Real-Time Live!」について、構成する技術について紹介していきます。
 
 SIGGRAPH Real-Time Live!とは、SIGGRAPH内で開催されるリアルタイムのライブデモセッションです。
 そもそも「SIGGRAPH」は ACM（Association for Computing Machinery, ニューヨークに本部のある計算機科学の国際学会）の分科会
@@ -55,7 +57,7 @@ NVIDIAのようなGPUメーカーのR&D成果の発表や研究者による技�
 
 === GREE VR Studio Lab の挑戦
 GREE VR Studio Labは2018年の東京での「Real Time Live!」においては★
-
+https://www.youtube.com/watch?v=zj2fe4A87GA
 =={a-label} Virtual CastとHapbeatを使った国際双方向アバター触覚ライブの開発
 === 実現したい機能
 
