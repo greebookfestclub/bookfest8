@@ -94,6 +94,12 @@ VCIスクリプトはLua言語を使って書きます。
 Unityをインストールして
 
 https://virtualcast.jp/wiki/doku.php?id=vci:script:luatutorial
+
+//list[test.lua][test.lua]{
+#@maprange(shirai/test.lua)
+#@end
+//}
+
 === Hapbeatを使用した国際双方向触覚ライブ
 
 === 会場音声分析からのギフト送信
