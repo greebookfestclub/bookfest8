@@ -90,7 +90,10 @@ VTuberによるグローバルな双方向触覚ライブ国際双方向触覚�
 //image[SA19RTL-map][東京と開催地のオーストラリア・ブリスベンは7,154km離れている。そしてVirtual Castの推奨環境は4K動画並み。]
 
 === Virtual CastとVCI
+VCIスクリプトはLua言語を使って書きます。
+Unityをインストールして
 
+https://virtualcast.jp/wiki/doku.php?id=vci:script:luatutorial
 === Hapbeatを使用した国際双方向触覚ライブ
 
 === 会場音声分析からのギフト送信
