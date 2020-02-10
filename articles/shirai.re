@@ -62,7 +62,8 @@ GREE VR Studio Labは、はじめてのリアルタイムライブデモ「“RE
 なお、IKINEMA社は本件に関してプレスリリースを発行しています@<bib>{SA18RTL-IKINEMA}、しかしその半年後にはAppleに買収されてしまいましたので、世の中なかなかうまくいかないなあというところです。
 
 #@# 2つの画像を合体させる予定
-//image[SA18-2355][SIGGRAPH ASIA 2018 TokyoでのReal-Time Live!の様子（SA公式提供）][scale=0.5]{
+#@# //image[SA18-2355][SIGGRAPH ASIA 2018 TokyoでのReal-Time Live!の様子（SA公式提供）][scale=0.5]{
+//image[SA18RTL][SIGGRAPH ASIA 2018 TokyoでのReal-Time Live!の様子（SIGGRAPH ASIA 公式提供）][scale=1.0]{
 //}
 
 =={a-label} Virtual CastとHapbeatを使った国際双方向アバター触覚ライブの開発
