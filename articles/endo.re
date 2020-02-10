@@ -58,7 +58,9 @@ gamelibがどのような構成になっているのかお話します。ざっ�
 
 == まとめ
 WFSの共通基盤を支えているのは一般的な技術です。それを更新しつつ提供しています。そこからの延長で海外課金も、地味な積み重ねで実現しています。
-今後必要な場面が増えていくことで、組織と共に技術的な方向転換が必要になることもあるでしょう。その時にまたどこかでまとめを作らせて頂きます。
+今後必要な場面が増えていくことで、組織と共に技術的な方向転換が必要になることもあるでしょう。その時にまたどこかでまとめを作らせて頂きます。@<fn>{endofn03}
 
 //footnote[endofn01][旧Wright Flyer Studios。 https://www.wfs.games/]
 //footnote[endofn02][例えばAppleの定期課金の扱いが異なる国があります。 https://support.apple.com/ja-jp/HT206627]
+//footnote[endofn03][なおこの原稿は、過去に発表した内容に補足を加えたものです。 https://www.slideshare.net/greetech/wfssdk]
+
