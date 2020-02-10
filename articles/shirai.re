@@ -75,7 +75,7 @@ SA18RTLに続き、夏のSIGGRAPH2019においては、世界でのVTuber業界�
 //}
 
 以上のような経緯から、SA19RTLにおいては、NTTドコモ副島義貴Pとイクスアール株式会社COO小池健輔氏、そしてVR Studio Labのインターンであり、東京工業大学発ベンチャー企業「Hapbeat合同会社」の代表でもある山崎勇祐さんと共著する形で企画提案をエントリーし、採択されました（@<href>{https://sa2019.siggraph.org/attend/real-time-live/session/111}）@<bib>{VRON20191119}。
-タイトルは「Global Bidirectional Remote Haptic Live Entertainment by Virtual Beings (VTuberによるグローバルな双方向触覚ライブ)」で、「生アニメ」として人気の「直感アルゴリズム」とコラボすることになりました。
+タイトルは「Global Bidirectional Remote Haptic Live Entertainment by Virtual Beings (VTuberによるグローバルな双方向触覚ライブ）」で、「生アニメ」として人気の「直感アルゴリズム」とコラボすることになりました。
 最終的なキャストとしては「直感アルゴリズム」のKilinさん（法元明菜さん）＆Xiさん（岩井映美里さん）が日本語と中国語を担当、そして英語担当として先述のWorld VTuber Showcaseでご縁のあった「お米アイドルMaiプリンセス」からミルキークイーンさんが参加することとなりました。
 
 
@@ -85,13 +85,22 @@ SA18RTLに続き、夏のSIGGRAPH2019においては、世界でのVTuber業界�
 #@# https://docs.google.com/presentation/d/1IosX_76FQ8Fi4ewnXgXh5uGrb83492zZMgIc7kjINuc/edit#slide=id.p6
 #@# https://docs.google.com/presentation/d/1MnfQwyAcq4JnD1lZKzVyksAS9ieWsNxJvo6msbVW-KQ/edit#slide=id.g78f914e51a_1_0
 #@# https://twitter.com/o_ob/status/1193913152716460033
-VTuberによるグローバルな双方向触覚ライブ国際双方向触覚ライブ実験します
 
+
+ * VTuberによる
+ * グローバルな
+ * 双方向
+ * 触覚ライブ
+ 
 //image[SA19RTL-map][東京と開催地のオーストラリア・ブリスベンは7,154km離れている。そしてVirtual Castの推奨環境は4K動画並み。]
 
+「直感アルゴリズム」の出演と双方向触覚を実装する上で、昨年のようにWFLE PTグループで開発しているUnreal Engine 4（UE4）ベースで開発されているスタジオのエンジンを使用する可能性もあったのですが、今回の挑戦として、また今後の技術の展開可能性を考えて、バーチャルキャストのVCIで実装すこうせいをえら
+
 === Virtual CastとVCI
+
+
 VCIスクリプトはLua言語を使って書きます。
-Unityをインストールして
+Unityをインストールして、
 
 https://virtualcast.jp/wiki/doku.php?id=vci:script:luatutorial
 
