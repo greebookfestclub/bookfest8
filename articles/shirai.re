@@ -96,7 +96,7 @@ Unityをインストールして
 https://virtualcast.jp/wiki/doku.php?id=vci:script:luatutorial
 
 //list[test.lua][test.lua]{
-#@maprange(shirai/test.lua)
+#@mapfile(shirai/test.lua)
 #@end
 //}
 
