@@ -60,6 +60,15 @@ Description	String	説明文
 PublishedAt	Timestamp	公開日時。現在時刻より過去の記事のみ表示する。
 //}
 
+===[column] ドメインモデルとは
+ドメイン駆動設計(DDD)で定義されている言葉です。
+システムの対象領域をドメインと呼びます。
+ドメインの本質的な部分を表現するモデルをドメインモデルと呼びます。
+ドメインモデルは、ドメインのエキスパートとプログラマの双方が理解できるものでなければなりません。
+今回はTech Conferenceドメインのエキスパートである運営責任者の方からお話を伺い、ドメインモデルを作成しました。
+
+===[/column]
+
 == 実装
 ドメインモデルは、以下の場所にファイルを配置しました。
 
@@ -96,6 +105,39 @@ data class Session(
 )
 //}
 
+===[column] Kotlin MPPとは
+Kotlin MPPとは、Kotlin Multi Platformの略称です。
+Kotlinで書かれたコードをAndroidだけでなく、iOS/Web/Serverなど様々なPlatformで実行することができます。
+例えば、共通コードに次のようなinterfaceを作ります。
+
+//listnum[WriteLog][kotlin]{
+internal expect fun writeLogMessage(message: String, logLevel: LogLevel)
+//}
+
+javaとjavascript用の実装を次のように書きます。
+
+//listnum[KotlinWriteLog][java]{
+internal actual fun writeLogMessage(message: String, logLevel: LogLevel) {
+    println("[$logLevel]: $message")
+}
+//}
+
+//listnum[JSWriteLog][javascript]{
+internal actual fun writeLogMessage(message: String, logLevel: LogLevel) {
+    when (logLevel) {
+        LogLevel.DEBUG -> console.log(message)
+        LogLevel.WARN -> console.warn(message)
+        LogLevel.ERROR -> console.error(message)
+    }
+}
+//}
+
+このようにして、javaとjavascript双方で動くコードを実装することができます。
+裏側を共通化し、UIに関わる部分をSwiftUIなどPlatform固有の実装を行いやすくなっています。
+全Platformでの共通処理であるドメインモデルの実装に最適と考えました。
+
+===[/column]
+
 == Serverからの利用
 DBから取得したデータを共通のドメインモデルに詰め替えてクライアント側に送信します。
 Kotlin MPPを使って作られていたKotlinFest公式アプリではセッション、スピーカーの全データを応答し、Client側でjoinしていました。
@@ -120,7 +162,8 @@ class SessionService {
             sessions = Session.all().toList()
             // format data
             result = sessions.map { session ->
-                val names: List<SpeakerModel> = session.speakers.map { speaker ->
+                val names: List<SpeakerModel> = session.speakers.map { 
+                speaker ->
                     SpeakerModel(
                         speaker.name,
                         speaker.title,
@@ -129,7 +172,8 @@ class SessionService {
                         speaker.description
                     )
                 }
-                val tagNames: List<TagModel> = session.tags.map { tag ->
+                val tagNames: List<TagModel> = session.tags.map { 
+                tag ->
                     TagModel(tag.name)
                 }
 
@@ -176,11 +220,24 @@ internal object Api {
     }
 
     // Read
-    suspend fun getSessions(): List<Session> = client.get<SessionList>("$endpoint/sessions").value
+    suspend fun getSessions(): List<Session> 
+        = client.get<SessionList>("$endpoint/sessions").value
 }
 //}
 
 == まとめ
+Kotlin MPPを使うことで、Kotlinで共通コードを実装することができます。
+Kotlinにはdata classが存在するため、ドメインモデルの実装に適しています。
+今回はドメインモデルとその通信部分の実装を共通化することができました。
+
+これまで携わったプロジェクトでは、ClientとServerで細部にズレが生じていました。
+特にOptionalかどうかという部分は、実装を行った人の考えに依存するケースが多いと感じていました。
+実装自体が共通化されることで、このようなブレが生じなくなることが期待できます。
+
+今回は紙面の都合上、ドメインモデルとその周辺のみ紹介させていただきました。
+今回のプロジェクト全体を説明すると1冊の書籍になりそうなので、できればチャレンジしてみたいと思います。
+
 本アプリは現在開発中であり、3月中旬のストア公開時にソースコードも公開予定です。
-GREE Tech Conferenceを含むGREEグループのEngineering関連情報は、 https://twitter.com/gree_tech で随時発信しています。
+GREE Tech Conferenceを含むGREEグループのEngineering関連情報は、 
+https://twitter.com/gree_tech で随時発信しています。
 興味のある方は、ぜひfollowをお願いします。
