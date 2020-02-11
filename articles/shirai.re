@@ -57,19 +57,17 @@ NVIDIAのようなGPUメーカーのR&D成果の発表や研究者による技�
 2018年の東京、SA18RTLは東京国際フォーラム「Hall C」という客席1,500人のホールで開催されました。この回ははじめてのSAにおけるRTLでしたので、上演プログラムは公募ベースではなくチェア（長谷川勇 氏，Luminous Productions／スクウェア・エニックス）による推薦ベースで実施されました。
 日本からはスクエニやバンナムさんがR&D成果として、リアルタイムグラフィックスやAIによる対話的アニメーションのデモをする中、
 GREE VR Studio Labは、はじめてのリアルタイムライブデモ「“REALITY: Be yourself you want to be” VTuber and presence technologies in live entertainment which can make interact between smartphone and virtual live characters（REALITY：「なりたい自分で生きていく」スマートフォンとバーチャルライブキャラクター間でやり取りできるVTuberとライブエンターテイメントのプレゼンス技術）」を発表しました @<bib>{SA18RTL}。
-この発表はVR Studio LabとWFLEに加えて、ニュージーランドでモーションセンサーに仕える新素材を開発しているStretchSense社と、イギリスでソフトウェアによるモーションキャプチャー補完ミドルウェアを開発しているIKINEMA社と共同で実施しました。シナリオはすべて日本語＋英語バイリンガルで構築し、ラボディレクターである白井が今居＝リアリテ＝レアというキャラクターを演じ、iPhoneXによる表情モーションキャプチャーと特殊表情の可能性@<bib>{CCSE2019}、StretchSense社によるグローブ、UnrealEngine4による統合されたリアルタイムキャラクターアニメーションと、IKINEMA社による女性アクターと、リアルタイム・アニメーション・クリーニング・パイプライン、さらに新規でキャラクター「IKINEMA Aya」もデザインし、ダンスシーンもあり、けっこう大変でしたが得るものも大きな挑戦でした。
+この発表はVR Studio LabとWFLEに加えて、ニュージーランドでモーションセンサーに仕える新素材を開発しているStretchSense社と、イギリスでソフトウェアによるモーションキャプチャー補完ミドルウェアを開発しているIKINEMA社と共同で実施しました。シナリオはすべて日本語＋英語バイリンガルで構築し、ラボディレクターである白井が今居＝リアリテ＝レアというキャラクターを演じ、iPhoneXによる表情モーションキャプチャーと特殊表情の可能性@<bib>{CCSE2019}、StretchSense社によるグローブ、UnrealEngine4による統合されたリアルタイムキャラクターアニメーションと、IKINEMA社による女性アクターと、リアルタイム・アニメーション・クリーニング・パイプライン、さらに新規でキャラクター「今居レア（IMAI Lea）」と「IKINEMA Aya」もデザインし、ダンスシーンもあり、けっこう大変でしたが得るものも大きな挑戦でした。
 海外メディアからも取材や事後レポートがあり、現在もVR Studio LabのYouTubeでは人気のコンテンツになっています（@<href>{https://www.youtube.com/watch?v=zj2fe4A87GA}）。
 なお、IKINEMA社は本件に関してプレスリリースを発行しています@<bib>{SA18RTL-IKINEMA}
 （しかしその半年後にはAppleに買収されてしまいましたので、世の中なかなかうまくいかない）。
 
-#@# 2つの画像を合体させる予定
 #@# //image[SA18-2355][SIGGRAPH ASIA 2018 TokyoでのReal-Time Live!の様子（SA公式提供）][scale=0.5]{
 //image[SA18RTL][SIGGRAPH ASIA 2018 TokyoでのReal-Time Live!の様子（SIGGRAPH ASIA 公式提供）][scale=1.0]{
 //}
-//image[SA18RTL2][Studio LabのYouTubeでは人気のコンテンツになっています（@<href>{https://www.youtube.com/watch?v=zj2fe4A87GA}）][scale=1.0]{
+//image[SA18RTL2][左の緑（IMAI Lea）が筆者です。ライブのダンスとiPhoneXによるライブの表情や特殊表情などをリアルタイムで披露しました。Studio LabのYouTubeでは人気のコンテンツになっています（@<href>{https://www.youtube.com/watch?v=zj2fe4A87GA}）][scale=1.0]{
 //}
 
-=={a-label} Virtual CastとHapbeatを使った国際双方向アバター触覚ライブの開発
 
 SA18RTLに続き、夏のSIGGRAPH2019においては、世界でのVTuber業界を再定義するべく「Virtual Beings World」というイベントを主催しました。
 この中でGREE VR Studio Labは「World VTuber Showcase」というティザー動画コンテスト（@<href>{http://j.mp/WVS19}）を開催し、世界中から集まった22作の中からNTTドコモ「直感×アルゴリズム♪」をグランプリとして選出、VTuber文化のアンバサダーになれる権利として任命し、2019年11月にオーストラリアで開催されるSA19RTLにおけるコラボレーションのきっかけになりました@<bib>{VRON20190809}。
@@ -77,81 +75,476 @@ SA18RTLに続き、夏のSIGGRAPH2019においては、世界でのVTuber業界�
 //image[S18VBW][SIGGRAPH 2018 で開催した「Virtual Beings World」の様子]{
 //}
 
-以上のような経緯から、SA19RTLにおいては、NTTドコモ副島義貴Pとイクスアール株式会社COO小池健輔氏、そしてVR Studio Labのインターンであり、東京工業大学発ベンチャー企業「Hapbeat合同会社」の代表でもある山崎勇祐さんと共著する形で企画提案をエントリーし、採択されました（@<href>{https://sa2019.siggraph.org/attend/real-time-live/session/111}）@<bib>{VRON20191119}。
-タイトルは「Global Bidirectional Remote Haptic Live Entertainment by Virtual Beings (VTuberによるグローバルな双方向触覚ライブ）」で、「生アニメ」として人気の「直感アルゴリズム」とコラボすることになりました。
-最終的なキャストとしては「直感アルゴリズム」のKilinさん（法元明菜さん）＆Xiさん（岩井映美里さん）が日本語と中国語を担当、そして英語担当として先述のWorld VTuber Showcaseでご縁のあった「お米アイドルMaiプリンセス」からミルキークイーンさんが参加することとなりました。
+
+=={a-label} Virtual CastとHapbeatを使った国際双方向アバター触覚ライブの開発
+
+以上のような経緯から、SA19RTLにおいては、NTTドコモ副島義貴Pと、ラボの発信活動でご協力いただいている産業用VRのスタートアップ企業・イクスアール株式会社COO小池健輔氏、そしてVR Studio Labのインターンであり、東京工業大学発スタートアップ企業「Hapbeat合同会社」の代表でもある山崎勇祐さんと共著する形で企画提案をエントリーし、採択されました（@<href>{https://sa2019.siggraph.org/attend/real-time-live/session/111}）@<bib>{VRON20191119}。
+
+タイトルは「Global Bidirectional Remote Haptic Live Entertainment by Virtual Beings」で、VTuberによるグローバルな双方向触覚ライブです。
+メインキャストは「生アニメ」として人気の「直感アルゴリズム」とコラボすることになりました。
+最終的なキャストとしては「直感アルゴリズム」のKilin（リンリン）さん（法元明菜さん）、Xi（シー）さん（岩井映美里さん）が日本語と中国語を担当、そして英語担当として先述のWorld VTuber Showcaseでご縁のあった「お米アイドルMaiプリンセス」からミルキークイーンさん（尾車Rいのりさん）が英国系英語のナビゲータとして参加することとなりました（マネジメントとスタジオを協力いただいたジャストプロさんありがとうございました！）。
 
 
-//image[SA19RTL-keyvisual][NTTドコモ副島Pのご協力により制作したキービジュアル][scale=0.5]
+//image[SA19RTLconcept2][NTTドコモ副島Pのご協力によって華やかになったキービジュアル（左）と、ミルキークイーンさんの参加で一層華やかになったコンセプト画像の一部（右）][scale=1.0]{
+//}
+
 
 === 実現したい機能
-#@# https://docs.google.com/presentation/d/1IosX_76FQ8Fi4ewnXgXh5uGrb83492zZMgIc7kjINuc/edit#slide=id.p6
-#@# https://docs.google.com/presentation/d/1MnfQwyAcq4JnD1lZKzVyksAS9ieWsNxJvo6msbVW-KQ/edit#slide=id.g78f914e51a_1_0
-#@# https://twitter.com/o_ob/status/1193913152716460033
+まず、この技術デモの目的として、複数人のVTuberのパフォーマンスを国際的なクラウドネットワークでつなぎ、触覚ディスプレイを使用して次世代の双方向バーチャルライブエンターテイメントの可能性を示すというところに目標を設定しました。
+
+出演者は東京で3Dのリアルタイムキャラクターをライブで演じ、オーストラリアのブリスベンでSIGGRAPH ASIAの視聴者とスクリーン越しに交流します。
+また東京側の出演者は触覚ディスプレイを介して会場の拍手と歓声を可視化しつつ感じることができるようにします。
+
+そしてVTuberライブとしてぜひとも挑戦したかった要素が「エモーションの共有」です。
+先述のとおりSIGGRAPHは、コンピューターグラフィックスとインタラクティブなテクニックの専門会議です。
+多くの聴衆はグラフィックスで素晴らしい経験をするはずですが、このデモは次世代のエンタメとしてグラフィックスに加えて、魅力的な要素が必要です。
+国際イベントにおける多様な聴衆のために、エモーション情報を分析して、出演者・参加者全員で共有したい。
+ネットワーク越しのグローバルな双方向インタラクションとVTubers用の触覚ディスプレイは技術的にも新しく、（NTTドコモさんが関わる上でも）5Gの次世代ネットワークライブエンターテイメントとして魅力的な挑戦になるはずです。
+理想をいえば、拡張された人間のライブの演技と触覚エンタメによって、距離、言語、文化、オーディオ、視覚障害の障壁も解決していきたい。
+
+//image[REMOPREconcept][REMOPRE - Vibeshare初期の概要設計。VCはVirtualCastの略。]{
+//}
+
+とはいえ全部盛りにはできませんので、以上のような構想から、
+今回のシナリオでは、触覚フィードバック、感情分析からのリアルタイムグラフィックスとインタラクションを中心に、
+欧米圏を中心とするSIGGRAPH参加者に向けて、バーチャルビーイングの将来の可能性について、
+楽しい雰囲気で感情に訴えていきたいという方向になりました。
+
+まとめると、
+（1）VTuberによる
+（2）多言語かつ世界規模でグローバルな
+（3）会場参加で双方向インタラクション
+（4）触覚が有効なライブ体験
+（5）ダンスや歌はしっかり楽しい
+という構成です。
+システム的にはコードネーム REMOPRE、後に「Viveshare」と名付けたシステムの開発が始まりました。
 
 
- * VTuberによる
- * グローバルな
- * 双方向
- * 触覚ライブ
+=== チーム編成と技術構成
 
-//image[SA19RTL-map][東京と開催地のオーストラリア・ブリスベンは7,154km離れている。そしてVirtual Castの推奨環境は4K動画並み。]
+まずは今回のデモを成立させる上で、また「直感アルゴリズム」の出演と双方向触覚を実装する上で、技術的な取捨選択を行いました。
+昨年のようにWFLE PTグループで開発しているUnreal Engine 4（UE4）ベースで開発されているスタジオのエンジンを使用することも魅力的なのですが、
+今回は挑戦として、また今後の技術の展開可能性を考えて、グラフィックエンジンは「VirtualCast」（バーチャルキャスト、以下VC）を採用することとしました。
+ドコモさんとVirtualCast社さんのご協力もあり、エンタープライズ版を中心に開発を進行させていただきました（コンシューマ版でもほとんどの機能は動くように開発しています）。
 
-「直感アルゴリズム」の出演と双方向触覚を実装する上で、昨年のようにWFLE PTグループで開発しているUnreal Engine 4（UE4）ベースで開発されているスタジオのエンジンを使用する可能性もあったのですが、今回の挑戦として、また今後の技術の展開可能性を考えて、バーチャルキャストのVCIで実装すこうせいをえら
+この時点での座組は、NTTドコモ、バーチャルキャスト社、ジャストプロ、EXR、Hapbeat、そしてGREE VRStudio Labというスーパーチームです。
+昨年は日本語と英語のバイリンガルですすめるコストがありましたが、今回はシナリオと実演以外は日本語だけで進行できそうです（これが後で別の問題を生んだりします）。
 
-=== Virtual CastとVCI
-
-
-VCIスクリプトはLua言語を使って書きます。
-Unityをインストールして、
-
-https://virtualcast.jp/wiki/doku.php?id=vci:script:luatutorial
-
-//list[test.lua][test.lua]{
-#@mapfile(shirai/test.lua)
-function update()
-
-    if vci.me.GetAxisInput().y == 1 then
-        print("enableLEDmeter")
-    end
-
-    if vci.me.GetAxisInput().y == -1 then
-        print("disableLEDmeter")
-    end
-
-end
-
-#@end
+//image[SA19RTLteam][SA19RTLチームフォト、2019年10月8日・六本木ヒルズにて撮影。][scale=0.7]{
 //}
 
 === Hapbeatを使用した国際双方向触覚ライブ
 
+まずは触覚のハードウェアです。近年、触覚デバイスはVRエンタメの世界を中心にさまざま登場していますが、
+「Hapbeat」は糸の張力を使った触覚デバイスで、音響信号から多様な触覚刺激を生起できる、かつ3万円程度で手軽に利用できるデバイスです。
+Hapbeat社による最新モデル「Hapbeat-Duo」は左右の紐を別々に制御できるモデルです。
+制御は音声信号のLRを使用して行い、ステレオ音源の左右の音量比がそのまま振動の出力比となります。
+非対称な振動を提示することで方向や距離など、表現できる情報が非常に広く、効果音のような短い振動用の波形を挿入することで、
+左右交互にトントン、とした打感を提示することも簡単にできますし、
+ちょっとしたアルゴリズムを開発することで、HMDを装着したユーザーに距離や方向を提示することもできます。
+（このあたりもラボの研究成果でもあります
+参考: https://dl.acm.org/citation.cfm?id=3338562 
+動画: https://www.youtube.com/watch?v=AgmFWBu5ZnM
+）
+
+今回はこのHapbeat-Duoを使い、オーストラリアと日本に分散して存在する出演者と、聴衆をつなぐ挑戦をします。
+
+//image[hapbeatduo][使用した触覚デバイス「Hapbeat-Duo」（ @<href>{https://booth.pm/ja/items/1549687} より購入できます）][scale=0.5]{
+//}
+
+
+
+
+=== Virtual Castと距離への挑戦
+
+東京と今回の開催地であるオーストラリア・ブリスベンは直線距離で 7,154km 離れています。地球の半径よりも遠いです。
+
+//image[SA19RTL-map][東京と開催地のオーストラリア・ブリスベンは7,154km離れている。そして Virtual Cast の推奨環境は4K動画並み。][scale=0.8]{
+//}
+
+そして VC の推奨環境は「上り下りとも 50Mbps以上 、レイテンシ 10ms以下、パケットロスなし」という情報がバーチャルキャスト社より公式情報として伝えられました。
+これは動画ストリーミングだと4K動画並みが必要ということになります。
+なおVC内部の通信はモノビットエンジンを使っているようで（@<href>{https://monobit.co.jp/vtuver/}）、これについてはさすがゲーム用エンジン。安定していました。
+一方で、VC内部の音声エンジンも、新しい仕組みを試しているところでした（@<href>{https://virtualcast.jp/blog/2019/10/virtualcastroadmap/}）。
+詳しい話は割愛しますが、最終的な判断には音声の同時発声と音声品質、帯域、そして装置構成や技術的安定など複雑な要素が絡み合い、難度が高い要素でした。
+
+=== （書きかけ）パフォーマンスの設計
+//image[TokyoBrisbane][TokyoBrisbane]{
+//}
+
+まずは当初提案されていた7分の暫定シナリオを紹介します。
+
+0-1分[はじめに] いくつかの言語で挨拶と自己紹介をします。メインMCは会場（ブリスベン）にありますが、2番目のMC、キャラクター、スタジオは東京にあります。
+
+1〜2分[私たちは遠隔地にいます] 2番目のMCは、ビデオ会議スタイルのビジュアルを通じて、スマートフォンで現地時間とGPS（Googleマップ）を表示します。また、ストリーミングの時間差と待ち時間もわかります。各サイトは2つのYouTubeLiveストリーミングを介して接続され、安定していますが、片側で20〜40秒の遅延があります。
+
+2-3分[双方向リモートハプティックライブ]オーディオチャネルを使用したHapbeatエクスペリエンスを示します。メインMC、審査員、および聴覚障害のある一部の視聴者は、Hapbeatデバイスに一般的なスマートフォン（YouTubeライブストリーミング）を装備します。パフォーマーは、遠くで面白い話をしながら、じゃんけんをします。
+
+3〜4分[安定性、互換性、および利便性]技術的には、ハプティクスと特殊なデバイスは、リモート環境で実行するのが非常に困難です。しかし、このデモンストレーションは、現在のYouTube Liveパイプラインとの適合性と互換性を示しています。また、音声/視覚障害の合理的な解決策も示しています。
+
+4〜5分[多言語での感情との相互作用]また、リアルタイムの翻訳で観客の顔、拍手、歓声を分析できるリアルタイムの感情アナライザーもあります。もともとは、パフォーマーの触覚フィードバック用ですが、視覚化されたデータとリアルタイムの翻訳は、会場のほとんどの聴衆にとっても魅力的です。会場の観客全員と面白い交流をします。
+
+5-6分[ダンスプレイ]それはフィナーレです。私たちは、ダンスプレイで観客を次世代のライブエンターテイメントに連れて行きます。
+
+
+VCを活用した暫定シナリオとして、9月10日ぐらいの段階でこんな感じになりました。
+
+0-1: あいさつ
+
+1-2: システムについて（豪州側バーチャルキャストに日本から凸する）
+
+2-3: ミルキークイーンが英語で通訳しながら直感アルゴリズムKirinが日本語、Xiが中国語（計3人）がVTuber文化とファンとのコミュニケーションについて語る
+
+3-6: パオズゲーム：白井が「会場で拍手をすると画面端のメーターがあがります」と紹介。右ウイングと左ウイングで拍手がなるたびにパオズが落ちてくる。「多いほうが勝ち！」その後「笑いでも何か落ちてきます」
+
+5-6: バーチャル・ウィリアムテル：日豪で頭上のリンゴを弓で射る
+
+6-7: 六本木で開催されたTIFFのようす（VR-HMD-5Gライブ）を紹介
+
+=== VCI を使ったVirtual Castの拡張
+
+VCはそのバーチャル空間にインタラクティブ性を持たせるために独自のスクリプトシステムを有しており「VCI」と呼ばれています。
+VCIはUnity上で3Dオブジェクトをセットアップし、スクリプトはLua言語を使って書くことができます。
+#@# https://virtualcast.jp/wiki/doku.php?id=vci:script:luatutorial
+
+上記のシナリオに現れる「パオズゲーム」や「バーチャル・ウイリアムテル」は、「直感アルゴリズム」番組中ではVCIを使って実装されています。
+
+コード的にはLuaなのでこんなかんじです。
+
+//list[Confetti.lua][Confetti.lua 紙吹雪を降らせる]{
+#@mapfile(shirai/Confetti.lua)
+math.randomseed(os.time())
+ConfettiTarget = vci.assets.GetSubItem("ConfettiTarget")
+ConfettiTarget.SetLocalPosition(Vector3.__new(0, 1.5, 0))
+vci.assets._ALL_SetMaterialColorFromName("Transparent",
+ Color.__new(1.0, 1.0, 1.0, 0.5))
+EEConfetti = vci.assets.GetSubItem("EEconfetti")
+gen_height = 0
+size = 1
+ToumeiFlag = 0
+
+function fallConfetti()
+    local rand_xpos = math.random(0, 100) / 100
+    local rand_zpos = math.random(0, 100) / 100
+    local rand_xvel = math.random(-100, 100) / 100
+    local rand_zvel = math.random(-100, 100) / 100
+    local ConfettiTarget_pos = ConfettiTarget.GetLocalPosition()
+    print(ConfettiTarget_pos)
+    local pos = Vector3.__new(ConfettiTarget_pos.x,
+     ConfettiTarget_pos.y + gen_height, ConfettiTarget_pos.z)
+    local scale = Vector3.__new(size, size, size)
+    EEConfetti.SetLocalPosition(pos)
+    EEConfetti.SetLocalScale(scale)
+    vci.assets.GetEffekseerEmitter("EEconfetti")._ALL_Play()
+end
+
+function update()
+    if vci.me.GetButtonInput(1) then
+        fallConfetti()
+    end
+    if vci.me.GetAxisInput().y == 1 then
+        print("enableLEDmeter")
+    end
+    if vci.me.GetAxisInput().y == -1 then
+        print("disableLEDmeter")
+    end
+end
+
+function onUse(use)
+    if use == "ConfettiTarget" then
+        if ToumeiFlag == 0 then
+            vci.assets._ALL_SetMaterialColorFromName(
+                "Transparent", Color.__new(1.0, 0, 1.0, 0.0))
+            ToumeiFlag = 1
+        end
+    end
+end
+#@end
+//}
+
+なお、VC自体の設計思想は「VR」というよりは
+「HMDを使って演じるバーチャルな3Dキャラクターによる放送局のためのシステム」ですので、
+VCIは主にグラフィックスについてのインタラクションしかかけません。
+具体的にはシーングラフと衝突、ユーザーによるグラブアクションなどが取得できますが、
+外部システムやデバイスとの通信はできません。
+つまり、この先は色々な魔改造を施していくことになります。
+
+
+== 実装と解説
+
+
+//image[SA19RTLeq][筆者の機材的な装備（解説を入れる予定）]{
+//}
+
+シナリオと技術的な実装要素を図にするとこんなかんじです。
+//image[SA19-scenario][シナリオと技術的な実装要素（ほぼ最終版資料より）]{
+//}
+
+
+#@# https://docs.google.com/presentation/d/1IosX_76FQ8Fi4ewnXgXh5uGrb83492zZMgIc7kjINuc/edit#slide=id.p6
+#@# SA19RTL https://docs.google.com/presentation/d/1MnfQwyAcq4JnD1lZKzVyksAS9ieWsNxJvo6msbVW-KQ/edit#slide=id.g78f914e51a_1_0
+
+続いて、個々の技術についての実装紹介になります。
+
 === 会場音声分析からのギフト送信
+まず、会場音声分析からのギフト送信を解説します。
 
-=== node.js を使ったVirtual Castの拡張
+会場の音響を分析するPCを用意し、python環境で開発した音声分析システムを使い、その分析結果を
+WebSocketを扱うことができるNode.jsのライブラリ「Socket.IO」を使ってJSON形式にて送受信させます。
+このあたりはラボのインターン、栢之間さん（東工大2年生）が中心になってPythonによる音響分析を実装しています。
 
-== その他の技術
+//list[MicPC-index.js][index.js（音響分析PC）]{
+const { PythonShell } = require('python-shell'); //pythonをnodeから起動する
+const express = require('express');
+const app = express();
+const socketio = require('socket.io')
+app.use(express.static('public'));
+const expressServer = app.listen(3000); //clientのポート番号（localhost:3000)
+const io = socketio(expressServer); 
+var python_script_path = '../../EmotionAnalysis/'; //実行するpython script
+let pyEmoAnalysis = new PythonShell(
+    'main.py', { mode: 'text', pythonOptions: ['-u'],
+    scriptPath: python_script_path });
+
+//EmoAnalysisからデータが飛んで来たら実行
+pyEmoAnalysis.on('message', data => {
+    obj = JSON.parse(data)
+    console.log(obj)
+    io.emit('send_EmoAna_Result', obj) 
+})
+//}
+
+上記の main.py で呼ばれる音声分析系はこんなかんじです。
+
+//list[judgeSet.py][judgeSet.py（main.pyに呼び出される）]{
+def realtime_sub(signal, fs):
+    mfcc = an.mfcc(signal, fs)
+    stft = an.stft(signal)
+    applause = an.find_largeapplause(mfcc, threshold[0])
+    laugh = an.find_laugh(mfcc, threshold[1])
+    excitement = an.excitement_base(stft)
+    return [applause, laugh, excitement]*coefficients
+//}
+
+ライブラリは PyAudioと librosa が主に使われています。
+STFTは short-time Fourier transform 短時間フーリエ変換です。
+MFCCはメル周波数ケプストラム係数（Mel-Frequency Cepstrum Coefficients）という
+聴覚フィルタに基づく音響分析手法で、人間の聴覚特性にあわせたフィルタバンクを使って高速に音響の特徴を抽出できます。
+結果として applause, laugh, excitement つまり、拍手のような喝采、笑いと興奮を抽出します。単純に拍手だけ判定することも可能です。
+
+#@# 冗長なのでとりあえず使用しない方向で
+#@# //list[judgeSet.py][judgeSet.py main.pyに呼び出される]{
+#@# def realtime(project):
+
+=== VCI と node.js を使ったVirtual Castの拡張
+
+前述のとおり、VCおよびVCIには外部システムとの通信機能はありませんが、唯一、デバッグ情報をWebSocketで受け取ることができます。
+oocytanbさんの vci-logcat というプロジェクトが詳しいのでここでの詳説は割愛します。
+
+@<href>{https://github.com/oocytanb/vci-logcat}
+
+
+VCI→他のシステムへの通信はWebSocket通信を使って実装します。
+逆に他のシステム→VCIへのイベントは、キーボード信号を使って実装することにします。
+具体的には pyAutokey という Pythonライブラリを使って、VCを使っているPCのキーイベントを発生させて、VC側ではそのキーイベントを拾います。
+
+//list[MainPCindex.js][VCを使うPCでの index.js より抜粋]{
+// 自動マウス＆キー操作用のpythonプログラムのセットアップ
+let pyAutoKey = new PythonShell('autokey.py', { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
+// 自動キー入力を行う閾値
+var Hi_Threshold = 0.7
+var Lo_Threshold = 0.4
+
+//io.on→socketが接続されたとき起動
+io.on('connection', (socket) => {
+    console.log('made socket connection', socket.id);
+    socket.on('echo', (arg) => {
+        console.log(arg)
+    })
+    socket.on('disconnect', () => {
+        console.log('disconnect');
+    });
+
+    socket.on('send_EmoAna_Result', (obj) => {
+        // mapするときの最大値を決定。最大値との比率で値を決める（設定した最大値以上で１、それ以外は0~1を返す）
+        var Applause_fromMax = 0.13
+        var Laugh_fromMax = 0.02
+        // まず得られた解析結果を0 ~ 指定した最大値の範囲（範囲A）に限定する。その後、範囲Aを0~1の範囲にマッピングする
+        obj.L_L = map(value_limit((obj.L_L - 0.001), 0, Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
+        obj.L_A = map(value_limit((obj.L_A - 0.04), 0, Applause_fromMax), 0, Applause_fromMax, 0, 1)
+        console.log(obj);
+        io.emit('tc2client', obj)
+    });
+});
+//}
+
+マッピング後の解析結果が閾値を超えたらマウスを (100,100）に動かし、指定のキー入力を動作させます。
+ただしこのスクリプトは起動後にマウスとキー入力を奪われるので、本番以外はコメントアウト推奨です。
 
 === M5Stackによる触覚の可視化
+//image[REMOPRE1117][REMOPRE1117]{
+//}
 
 
-== パフォーマンス
-=== シナリオの設計
-=== シナリオを作りこみ
+筆者が背負っているPC（HP OMENX）の中で動いている nodeサーバのコードはこんなかんじです。
+音声分析PCから送られてきた解析結果をマッピングして、VCのデバッグ情報をWebsocketで受け取ります。
+それらの値をトリガーとして、M5Stackにシリアル通信でコマンドを送りLEDを光らせます。
+
+なお、すべてクラウド環境で動作したい設計なので、ngrok（エングロック）を使ってトンネル化し、
+ローカル環境上で実行しているアプリケーションの通信をインターネット経由で動作するようにしています。
+これは会場のネットワーク、特にWifiが数千人の国際イベントではまともに動作しないことを想定し、LTE等の公衆回線を使うことを想定した設計です。
+
+//list[OMEN-index.js][index.js]{
+const express = require('express');
+const socket = require('socket.io');
+const { PythonShell } = require('python-shell'); // varを{}で囲むのが重要らしい
+
+// サーバー立ち上げ
+var app = express();
+const PORT = process.env.PORT || 4000 //環境変数orPort4000
+var server = app.listen(PORT, () => {
+    console.log('listening to requests on port ' + PORT)
+});
+
+//ngrokで起動したいとき（port80)
+const ngrok = require('ngrok')
+
+connectNgrok().then(url => {
+    console.log('URL : ' + url);
+});
+async function connectNgrok() {
+    let url = await ngrok.connect({
+        addr: 4000, // port or network address, defaults to 80
+        subdomain: 'omen', // reserved tunnel name https://alex.ngrok.io
+        authtoken: '1RJoJasaKQQTfoZHGDBCRFcbjaT_7LQEzWMEdZEiCK7jaY7rZ', // your authtoken from ngrok.com
+        region: 'jp', // one of ngrok regions (us, eu, au, ap), defaults to us
+    });
+    return url;
+}
+//--------------------------------
+// Socket setup
+var io = socket(server);
+
+var L_Top2Bot = 200 //数字の説明：xyz, y = 左右（左＝0、右＝1）
+R_Top2Bot = 210
+L_Bot2Top = 201
+R_Bot2Top = 211
+L_Center2Edge = 202
+R_Center2Edge = 212
+L_Edge2Center = 203
+R_Edge2Center = 213
+L_MeterLED = 204
+R_MeterLED = 214
+Random_Rainbow = 205
+HandShaked = 206
+hit2body = 207
+Start_HB = 250
+Stop_HB = 251
+
+var LED_Mode = 1; //LEDが光るモード。0にすると拍手・笑いをdisable
+let pySendSerial = new PythonShell('sendserial.py', { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
+pySendSerial.on('message', data => {
+    console.log(data)
+})
+
+// VCからのメッセージを送ってマイコンでLED光らせるのが目的(VC非起動時はエラーになるのでコメントアウトする)
+// -----------------------------------------------------------
+// const vci_logcat = require('./vci-logcat/bin/vci-logcat')
+// var vci = vci_logcat.vciEmitter
+
+// vci.on('print', (arg) => {
+//     console.log(arg);
+//     if (arg == 'hit2apple') {
+//         pySendSerial.send(String(Random_Rainbow))
+//     }
+//     if (arg == 'hit2body') {
+//         pySendSerial.send(String(hit2body))
+//     }
+//     // if (arg == 'Handshaked') {
+//     //     pySendSerial.send(String(L_Bot2Top))
+//     //     pySendSerial.send(String(R_Bot2Top))
+//     // }
+//     if (arg == 'HugOn') {
+//         pySendSerial.send(String(Start_HB)) //鼓動表現。一定の周期で光らせる
+//     }
+//     if (arg == 'HugExit') {
+//         pySendSerial.send(String(Stop_HB)) //
+//     }
+//     if (arg == 'enableLEDmeter') { // 笑い、拍手にLEDを反応させる
+//         LED_Mode = 1
+//         console.log("enabled")
+//     }
+//     if (arg == 'disableLEDmeter') { // 笑い、拍手にLEDが反応させない
+//         LED_Mode = 0
+//         console.log("disabled")
+//     }
+//     if (arg == 'Handshaked') {
+//         pySendSerial.send(String(HandShaked))
+//     }
+// })
+// -------------------------
+// /OMEN
+
+// 値の範囲を変換する関数。例：(5,0,10,0,100) => return 50
+const map = (value, fromMin, fromMax, toMin, toMax) => {
+    let result = 0;
+    result = (value <= fromMin)
+        ? toMin : (value >= fromMax)
+            ? toMax : (() => {
+                let ratio = (toMax - toMin) / (fromMax - fromMin);
+                return (value - fromMin) * ratio + toMin;
+            })();
+    return result;
+};
+
+// 値の範囲をmin~maxの間で制限する関数。例：(5,0,4) => return 4
+function value_limit(val, min, max) {
+    return val < min ? min : (val > max ? max : val);
+}
+
+//io.on→socketが接続されたとき起動
+io.on('connection', (socket) => {
+    socket.on('send_EmoAna_Result', (obj) => {
+        // mapするときの最大値を決定。最大値との比率で値を決める（設定した最大値以上で１、それ以外は0~1）
+        var Applause_fromMax = 0.13
+        var Laugh_fromMax = 0.02
+        obj.L_L = map(value_limit((obj.L_L - 0.001), 0, Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
+        obj.L_A = map(value_limit((obj.L_A - 0.04), 0, Applause_fromMax), 0, Applause_fromMax, 0, 1)
+        console.log(obj);
+        io.emit('tc2client', obj)
+        // OMEN
+        //EmoAnaから入ってきた0~1の解析結果をLEDの数（0~28）に再マップ
+        L_L_barheight = Math.round(map(obj.L_L, 0, 1, 0, 28))
+        L_A_barheight = Math.round(map(obj.L_A, 0, 1, 0, 28)) + 30
+
+        pySendSerial.send(String(L_L_barheight))
+        pySendSerial.send(String(L_A_barheight))
+
+        pySendSerial.send(String(L_MeterLED))
+        pySendSerial.send(String(R_MeterLED))
+    });
+})
+//}
+
+
 === リハーサルをする
 === ダンスを練習する
 
 == 当日に起きたこと
 === 国際リモートライブのためのリハーサル
-=== 機材がクソ重い
-=== 音声品質と遠のくゴール
-=== 不測のトラブル
+
+ * 機材がクソ重い
+ * 音声品質と遠のくゴール
+ * 不測のトラブル
 #@# Matt AI - Speech Driven Digital Human with Emotions http://sa2019.conference-program.com/presentation/?id=real_106&sess=sess230 Jingxiang Li, et al. Tencent Technology Company Limited
 
 == 今後に向けて
-=== フィードバック
-=== 音響の改善
-=== シナリオの改善
+ * フィードバック
+ * 音響の改善
+ * シナリオの改善
+
+
+結局のところ、シナリオのおもしろさをレビューするのも大事だし、設計のレビューも、音響周りのレビューも、技術のライブデモはほとんど技術なのでした。　
 
 == 謝辞
  SA19RTL ふりかえり ミルキークイーンさん/尾車Roseいのりさん
