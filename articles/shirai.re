@@ -59,11 +59,14 @@ NVIDIAのようなGPUメーカーのR&D成果の発表や研究者による技�
 GREE VR Studio Labは、はじめてのリアルタイムライブデモ「“REALITY: Be yourself you want to be” VTuber and presence technologies in live entertainment which can make interact between smartphone and virtual live characters（REALITY：「なりたい自分で生きていく」スマートフォンとバーチャルライブキャラクター間でやり取りできるVTuberとライブエンターテイメントのプレゼンス技術）」を発表しました @<bib>{SA18RTL}。
 この発表はVR Studio LabとWFLEに加えて、ニュージーランドでモーションセンサーに仕える新素材を開発しているStretchSense社と、イギリスでソフトウェアによるモーションキャプチャー補完ミドルウェアを開発しているIKINEMA社と共同で実施しました。シナリオはすべて日本語＋英語バイリンガルで構築し、ラボディレクターである白井が今居＝リアリテ＝レアというキャラクターを演じ、iPhoneXによる表情モーションキャプチャーと特殊表情の可能性@<bib>{CCSE2019}、StretchSense社によるグローブ、UnrealEngine4による統合されたリアルタイムキャラクターアニメーションと、IKINEMA社による女性アクターと、リアルタイム・アニメーション・クリーニング・パイプライン、さらに新規でキャラクター「IKINEMA Aya」もデザインし、ダンスシーンもあり、けっこう大変でしたが得るものも大きな挑戦でした。
 海外メディアからも取材や事後レポートがあり、現在もVR Studio LabのYouTubeでは人気のコンテンツになっています（@<href>{https://www.youtube.com/watch?v=zj2fe4A87GA}）。
-なお、IKINEMA社は本件に関してプレスリリースを発行しています@<bib>{SA18RTL-IKINEMA}、しかしその半年後にはAppleに買収されてしまいましたので、世の中なかなかうまくいかないなあというところです。
+なお、IKINEMA社は本件に関してプレスリリースを発行しています@<bib>{SA18RTL-IKINEMA}
+（しかしその半年後にはAppleに買収されてしまいましたので、世の中なかなかうまくいかない）。
 
 #@# 2つの画像を合体させる予定
 #@# //image[SA18-2355][SIGGRAPH ASIA 2018 TokyoでのReal-Time Live!の様子（SA公式提供）][scale=0.5]{
 //image[SA18RTL][SIGGRAPH ASIA 2018 TokyoでのReal-Time Live!の様子（SIGGRAPH ASIA 公式提供）][scale=1.0]{
+//}
+//image[SA18RTL2][Studio LabのYouTubeでは人気のコンテンツになっています（@<href>{https://www.youtube.com/watch?v=zj2fe4A87GA}）][scale=1.0]{
 //}
 
 =={a-label} Virtual CastとHapbeatを使った国際双方向アバター触覚ライブの開発
@@ -79,7 +82,7 @@ SA18RTLに続き、夏のSIGGRAPH2019においては、世界でのVTuber業界�
 最終的なキャストとしては「直感アルゴリズム」のKilinさん（法元明菜さん）＆Xiさん（岩井映美里さん）が日本語と中国語を担当、そして英語担当として先述のWorld VTuber Showcaseでご縁のあった「お米アイドルMaiプリンセス」からミルキークイーンさんが参加することとなりました。
 
 
-//image[SA19RTL-keyvisual][NTTドコモ副島Pのご協力により制作したキービジュアル]
+//image[SA19RTL-keyvisual][NTTドコモ副島Pのご協力により制作したキービジュアル][scale=0.5]
 
 === 実現したい機能
 #@# https://docs.google.com/presentation/d/1IosX_76FQ8Fi4ewnXgXh5uGrb83492zZMgIc7kjINuc/edit#slide=id.p6
@@ -91,7 +94,7 @@ SA18RTLに続き、夏のSIGGRAPH2019においては、世界でのVTuber業界�
  * グローバルな
  * 双方向
  * 触覚ライブ
- 
+
 //image[SA19RTL-map][東京と開催地のオーストラリア・ブリスベンは7,154km離れている。そしてVirtual Castの推奨環境は4K動画並み。]
 
 「直感アルゴリズム」の出演と双方向触覚を実装する上で、昨年のようにWFLE PTグループで開発しているUnreal Engine 4（UE4）ベースで開発されているスタジオのエンジンを使用する可能性もあったのですが、今回の挑戦として、また今後の技術の展開可能性を考えて、バーチャルキャストのVCIで実装すこうせいをえら
@@ -106,6 +109,18 @@ https://virtualcast.jp/wiki/doku.php?id=vci:script:luatutorial
 
 //list[test.lua][test.lua]{
 #@mapfile(shirai/test.lua)
+function update()
+
+    if vci.me.GetAxisInput().y == 1 then
+        print("enableLEDmeter")
+    end
+
+    if vci.me.GetAxisInput().y == -1 then
+        print("disableLEDmeter")
+    end
+
+end
+
 #@end
 //}
 
