@@ -264,16 +264,15 @@ end
 
 なお、VC自体の設計思想は「VR」というよりは
 「HMDを使って演じるバーチャルな3Dキャラクターによる放送局のためのシステム」ですので、
-VCIは主にグラフィックスについてのインタラクションしかかけません。
-具体的にはシーングラフと衝突、ユーザーによるグラブアクションなどが取得できますが、
+VCIは主にグラフィックスについてのインタラクション、具体的にはシーングラフと衝突、ユーザーによるグラブアクションなどが取得できますが、
 外部システムやデバイスとの通信はできません。
-つまり、この先は色々な魔改造を施していくことになります。
+この先は色々な魔改造を施していくことになります。
 
 
 == 実装と解説
 
 
-//image[SA19RTLeq][筆者の機材的な装備（解説を入れる予定）]{
+//image[SA19RTLeq][筆者の機材的な装備（解説を入れる予定）][scale=0.5]{
 //}
 
 シナリオと技術的な実装要素を図にするとこんなかんじです。
@@ -288,6 +287,7 @@ VCIは主にグラフィックスについてのインタラクションしか�
 
 === 会場音声分析からのギフト送信
 まず、会場音声分析からのギフト送信を解説します。
+会場の歓声や拍手、笑いなどによって、VCIのアイテムをバーチャルギフトとして降らせることがゴールです。
 
 会場の音響を分析するPCを用意し、python環境で開発した音声分析システムを使い、その分析結果を
 WebSocketを扱うことができるNode.jsのライブラリ「Socket.IO」を使ってJSON形式にて送受信させます。
@@ -339,18 +339,17 @@ MFCCはメル周波数ケプストラム係数（Mel-Frequency Cepstrum Coeffici
 === VCI と node.js を使ったVirtual Castの拡張
 
 前述のとおり、VCおよびVCIには外部システムとの通信機能はありませんが、唯一、デバッグ情報をWebSocketで受け取ることができます。
-oocytanbさんの vci-logcat というプロジェクトが詳しいのでここでの詳説は割愛します。
-
+oocytanbさんの vci-logcat というプロジェクト（
 @<href>{https://github.com/oocytanb/vci-logcat}
-
+）が詳しいのでここでの詳説は割愛します。
 
 VCI→他のシステムへの通信はWebSocket通信を使って実装します。
 逆に他のシステム→VCIへのイベントは、キーボード信号を使って実装することにします。
 具体的には pyAutokey という Pythonライブラリを使って、VCを使っているPCのキーイベントを発生させて、VC側ではそのキーイベントを拾います。
 
-//list[MainPCindex.js][VCを使うPCでの index.js より抜粋]{
-// 自動マウス＆キー操作用のpythonプログラムのセットアップ
-let pyAutoKey = new PythonShell('autokey.py', { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
+//list[MainPCindex.js][自動マウス＆キー操作用のpythonプログラムのセットアップ]{
+let pyAutoKey = new PythonShell('autokey.py',
+ { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
 // 自動キー入力を行う閾値
 var Hi_Threshold = 0.7
 var Lo_Threshold = 0.4
@@ -365,14 +364,16 @@ io.on('connection', (socket) => {
         console.log('disconnect');
     });
 
+    // mapするときの最大値を決定。最大値との比率で値を決める
     socket.on('send_EmoAna_Result', (obj) => {
-        // mapするときの最大値を決定。最大値との比率で値を決める（設定した最大値以上で１、それ以外は0~1を返す）
         var Applause_fromMax = 0.13
         var Laugh_fromMax = 0.02
-        // まず得られた解析結果を0 ~ 指定した最大値の範囲（範囲A）に限定する。その後、範囲Aを0~1の範囲にマッピングする
-        obj.L_L = map(value_limit((obj.L_L - 0.001), 0, Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
-        obj.L_A = map(value_limit((obj.L_A - 0.04), 0, Applause_fromMax), 0, Applause_fromMax, 0, 1)
-        console.log(obj);
+        // まず得られた解析結果を0 ~ 指定した最大値の範囲（範囲A）に限定する。
+        // その後、範囲Aを0~1の範囲にマッピングする
+        obj.L_L = map(value_limit((obj.L_L - 0.001), 0,
+         Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
+        obj.L_A = map(value_limit((obj.L_A - 0.04), 0,
+         Applause_fromMax), 0, Applause_fromMax, 0, 1)
         io.emit('tc2client', obj)
     });
 });
@@ -386,7 +387,7 @@ io.on('connection', (socket) => {
 //}
 
 
-筆者が背負っているPC（HP OMENX）の中で動いている nodeサーバのコードはこんなかんじです。
+筆者が背負っているPC（HP OMENX）の中で動いている nodeサーバのコード（index.js）はこんなかんじです。
 音声分析PCから送られてきた解析結果をマッピングして、VCのデバッグ情報をWebsocketで受け取ります。
 それらの値をトリガーとして、M5Stackにシリアル通信でコマンドを送りLEDを光らせます。
 
@@ -394,7 +395,7 @@ io.on('connection', (socket) => {
 ローカル環境上で実行しているアプリケーションの通信をインターネット経由で動作するようにしています。
 これは会場のネットワーク、特にWifiが数千人の国際イベントではまともに動作しないことを想定し、LTE等の公衆回線を使うことを想定した設計です。
 
-//list[OMEN-index.js][index.js]{
+//list[OMEN-index.js1][VCからのメッセージを送ってマイコンでLED光らせる index.js（前半）]{
 const express = require('express');
 const socket = require('socket.io');
 const { PythonShell } = require('python-shell'); // varを{}で囲むのが重要らしい
@@ -416,15 +417,19 @@ async function connectNgrok() {
     let url = await ngrok.connect({
         addr: 4000, // port or network address, defaults to 80
         subdomain: 'omen', // reserved tunnel name https://alex.ngrok.io
-        authtoken: '1RJoJasaKQQTfoZHGDBCRFcbjaT_7LQEzWMEdZEiCK7jaY7rZ', // your authtoken from ngrok.com
+        authtoken: '***', // your authtoken from ngrok.com
         region: 'jp', // one of ngrok regions (us, eu, au, ap), defaults to us
     });
     return url;
 }
-//--------------------------------
+//}
+
+
+M5Stackは中々優秀なのですが、通信を文字で行うと流石に重たく、24個のフルカラーLEDが美しく光ってくれないので、intをうまく使って3種類の点灯モードと強度を詰め込んでいきます。
+
+//list[OMEN-index.js2][VCからのメッセージを送ってマイコンでLED光らせる index.js（後半）]{
 // Socket setup
 var io = socket(server);
-
 var L_Top2Bot = 200 //数字の説明：xyz, y = 左右（左＝0、右＝1）
 R_Top2Bot = 210
 L_Bot2Top = 201
@@ -442,48 +447,11 @@ Start_HB = 250
 Stop_HB = 251
 
 var LED_Mode = 1; //LEDが光るモード。0にすると拍手・笑いをdisable
-let pySendSerial = new PythonShell('sendserial.py', { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
+let pySendSerial = new PythonShell('sendserial.py',
+ { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
 pySendSerial.on('message', data => {
     console.log(data)
 })
-
-// VCからのメッセージを送ってマイコンでLED光らせるのが目的(VC非起動時はエラーになるのでコメントアウトする)
-// -----------------------------------------------------------
-// const vci_logcat = require('./vci-logcat/bin/vci-logcat')
-// var vci = vci_logcat.vciEmitter
-
-// vci.on('print', (arg) => {
-//     console.log(arg);
-//     if (arg == 'hit2apple') {
-//         pySendSerial.send(String(Random_Rainbow))
-//     }
-//     if (arg == 'hit2body') {
-//         pySendSerial.send(String(hit2body))
-//     }
-//     // if (arg == 'Handshaked') {
-//     //     pySendSerial.send(String(L_Bot2Top))
-//     //     pySendSerial.send(String(R_Bot2Top))
-//     // }
-//     if (arg == 'HugOn') {
-//         pySendSerial.send(String(Start_HB)) //鼓動表現。一定の周期で光らせる
-//     }
-//     if (arg == 'HugExit') {
-//         pySendSerial.send(String(Stop_HB)) //
-//     }
-//     if (arg == 'enableLEDmeter') { // 笑い、拍手にLEDを反応させる
-//         LED_Mode = 1
-//         console.log("enabled")
-//     }
-//     if (arg == 'disableLEDmeter') { // 笑い、拍手にLEDが反応させない
-//         LED_Mode = 0
-//         console.log("disabled")
-//     }
-//     if (arg == 'Handshaked') {
-//         pySendSerial.send(String(HandShaked))
-//     }
-// })
-// -------------------------
-// /OMEN
 
 // 値の範囲を変換する関数。例：(5,0,10,0,100) => return 50
 const map = (value, fromMin, fromMax, toMin, toMax) => {
@@ -501,50 +469,24 @@ const map = (value, fromMin, fromMax, toMin, toMax) => {
 function value_limit(val, min, max) {
     return val < min ? min : (val > max ? max : val);
 }
-
-//io.on→socketが接続されたとき起動
-io.on('connection', (socket) => {
-    socket.on('send_EmoAna_Result', (obj) => {
-        // mapするときの最大値を決定。最大値との比率で値を決める（設定した最大値以上で１、それ以外は0~1）
-        var Applause_fromMax = 0.13
-        var Laugh_fromMax = 0.02
-        obj.L_L = map(value_limit((obj.L_L - 0.001), 0, Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
-        obj.L_A = map(value_limit((obj.L_A - 0.04), 0, Applause_fromMax), 0, Applause_fromMax, 0, 1)
-        console.log(obj);
-        io.emit('tc2client', obj)
-        // OMEN
-        //EmoAnaから入ってきた0~1の解析結果をLEDの数（0~28）に再マップ
-        L_L_barheight = Math.round(map(obj.L_L, 0, 1, 0, 28))
-        L_A_barheight = Math.round(map(obj.L_A, 0, 1, 0, 28)) + 30
-
-        pySendSerial.send(String(L_L_barheight))
-        pySendSerial.send(String(L_A_barheight))
-
-        pySendSerial.send(String(L_MeterLED))
-        pySendSerial.send(String(R_MeterLED))
-    });
-})
 //}
 
+会場で笑いや拍手が起きると、両脇のカラーLEDが3種類のパターンでカラフルに明滅します。
+実際、演者はHMDを装着しており、会場のリアクションに反応することは難しいのですが、これによって触覚とLEDが双方向性を与えてくれます。
+なお、ステージや会場の遠くからの視認性を確認するために、ハロウィン前夜の六本木ヒルズで実験したりしました。
 
-=== リハーサルをする
-=== ダンスを練習する
+== 当日に起きたこと ＆ 今後に向けて
 
-== 当日に起きたこと
-=== 国際リモートライブのためのリハーサル
+その後、国際リモートライブのためのリハーサル、特に日豪同時リハーサルやReal-Time Live!特有の公式練習、ひたすらダンスの練習（オリジナル振付）、機材がクソ重い、音声品質と遠のくゴール、不測のトラブル、すごすぎる他の発表者…などなどいろいろありましたが、そろそろ長すぎるような気もするのでこのへんで筆を置きたいと思います。
 
- * 機材がクソ重い
- * 音声品質と遠のくゴール
- * 不測のトラブル
 #@# Matt AI - Speech Driven Digital Human with Emotions http://sa2019.conference-program.com/presentation/?id=real_106&sess=sess230 Jingxiang Li, et al. Tencent Technology Company Limited
 
-== 今後に向けて
- * フィードバック
- * 音響の改善
- * シナリオの改善
-
-
 結局のところ、シナリオのおもしろさをレビューするのも大事だし、設計のレビューも、音響周りのレビューも、技術のライブデモはほとんど技術なのでした。　
+
+次回のSIGGRAPHはワシントンです。
+でもオリンピックも直撃の日程なので、なかなか無理はできなさそう。
+
+2021年のSAは東京なので、ここに向けてどんどんパワーアップして、世界中を驚きと笑いでひっくり返したいですね！
 
 == 謝辞
  SA19RTL ふりかえり ミルキークイーンさん/尾車Roseいのりさん
@@ -552,7 +494,8 @@ io.on('connection', (socket) => {
 本当にありがとうございました。
 
 我々がなぜバーチャルビーイング（virtual being）なのか?という本質的な問 いについての深いシナリオまでできていたのですが、 残念ながら本番は声が元気すぎてマイクが死んでしまったものと推測しま す。今後、再挑戦する機会を是非とも作りたい! ぜひご一緒できましたら幸いです。
-リンリンさん/法元明菜さん いつもよく気がつく努力家なリンリン/法元明菜さん。作って頂いた振り付け がとてもよく、徹夜で練習しまくりました。本番では音が飛んでいたのに踊 り続けられたのはこの特訓のおかげ!そして自己紹介パートのステキなイラ ストありがとうございました!
+リンリンさん/法元明菜さん。
+いつもよく気がつく努力家なリンリン/法元明菜さん。作って頂いた振り付け がとてもよく、徹夜で練習しまくりました。本番では音が飛んでいたのに踊 り続けられたのはこの特訓のおかげ!そして自己紹介パートのステキなイラ ストありがとうございました!
 シーさん/岩井映美里さん いろんなご都合で本番直前のみの絡みとなり「いつもマイペースで何を考え ているか分からないところがあるよ~」という情報だけは頂いていたので実 はちょっぴり不安があったのですが、そんなことは杞憂でした。本当に声もキレイだし、芯がしっかりした人物なのだと感じました。特に最後のダンスシ ーン!会場のミュージックがトラブルで切れており、しかもバーチャル内で はそのトラブルがわからない状態だったのに、最後まで歌い続けて踊りもし っかり...会場は何が起きているのか、これがライブなのか!とわかり手拍子 から拍手の渦...今思い出しても泣きそうになります。
 スタッフの皆様/おわりに
 チェアの皆さんや他のReal-Time Live!発表者にもインタビューしてみたので すが、やっぱり会場をもっとも沸かせたのはウチの発表!新開発の会場熱気分析 システムもみごとにメーター振り切っていました。会場投票が無かったのは
@@ -560,12 +503,15 @@ io.on('connection', (socket) => {
  残念!トロフィー持って帰りたかった!くやしい! でも音声トラブルがあってシナリオがしっかり聞いてもらえなかったのも事実だし、審査員賞を取ったパフォーマンスもホント凄かった!これは是非と も学びたいやつです。 というわけで次はの挑戦は夏のSIGGRAPH（ワシントンD.C. 8/19-23）で会場 投票一位を目指して頑張るか、中国ライブかな...同じことは二度とやらない のがラボのポリシーでもあるので、技術的チャレンジも盛り込んでがんばっていきたいと思います!
 
 
-====[column] Azure環境で技術書を書く
+====[column] Re:view環境で技術書を書く
 
-本稿はVSCodeのブラウザ版で書いています。
+本稿を書くにあたり、Re:view環境初体験となりました。
 
+普段はOverLeafなどのクラウドLaTeX環境で執筆することが多いです。
+（日本語の論文ではない書物、技術書は久しぶりに書きました！）
+
+時々VSCodeのブラウザ版で書いてみたりもしましたので、ちょっとだけ紹介しておきます。
 @<href>{https://online.visualstudio.com/}
-
 最初はWindowsにDocker環境を構築しようとしてジタバタいたのですが、執筆のためだけにあれこれインストールするのに疲れました…Azureのアカウントが必要ですが、無料枠で十分な感じです。
 このブラウザ版VSCode（正式名称はVisual Studio Online）にはターミナルもbash環境もあり、Docker環境も作れるようなのですが、あれこれインストールするならいっそ
 Visual Studio Code環境だけでも作れそうな気がします。
@@ -576,8 +522,11 @@ Visual Studio Code環境だけでも作れそうな気がします。
 自分の研究室ではかつて、卒論集を Cloud LaTeX や Github で管理していたのと、自分の書籍はXMLで書いていた時期もあったので技術書典部をきっかけにいろいろ勉強になりました！
 
 えっ、GithubのURLから直接編集できるんですか？便利すぎる！
+CI環境なども素敵です。
 iPadのブラウザでも行けそうです！最近のiPadOSはZIPファイルもスンナリ解凍できるし…これは結構快適な技術書ライフが送れそうです。
-樋口さん 環境構築ありがとうございます！！
+
+とはいえDocker環境はMacOSが圧倒的に楽ですね。
+樋口さん 環境構築ありがとうございました！！
 
 ====[/column]
 
