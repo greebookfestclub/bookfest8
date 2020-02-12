@@ -15,9 +15,18 @@ Kotlin MPPを使ってドメインモデルを実装し、Server/Android/iOSア�
  * スケジュールがみれる
  * ニュースがみれる
 
+セッションとは、１コマの発表のことです。
+スケジュールとは、セッションを時系列で一覧表示したものです。
+ニュースとは、参加者へ伝えたい情報を書いた記事のことです。
 
 == ドメインモデル
 要件を受けて、次のようなドメインモデルを作りました。
+
+まず、セッションです。
+セッションには、発表者、開始終了時刻、タイトル、説明文が必要です。
+ドメインエキスパートと話していると発表資料と登壇動画を共有したいという要望が明らかになりました。
+また、タグを付けて検索したいとの追加要望がありました。
+それらをSessionドメインモデルとして定義しました。
 
 //table[SessionTable][Session]{
 属性名  型  説明
@@ -28,10 +37,13 @@ StartTime	Timestamp	開始時刻
 EndTime	Timestamp	終了時刻
 Title	String	タイトル
 Description	String	説明文
-SlideUrl	String	発表後に追加されるSlideShareのURL(Webのみ表示? 要確認)
-MovieUrl	String	発表後に追加される登壇動画のURL(Webのみ表示? 要確認)
+SlideUrl	String	発表後に追加されるSlideShareのURL
+MovieUrl	String	発表後に追加される登壇動画のURL
 TagList	List<Tag>	タグ一覧。
 //}
+
+次にスピーカーです。
+他のカンファレンスを参考にして、氏名、肩書き、経歴、GitHub/Twitterを表示することとなりました。
 
 //table[SpeakerTable][Speaker]{
 属性名  型  説明
@@ -44,12 +56,18 @@ TwitterId	String	登壇者情報に掲載するTwitterId
 Description	String	登壇者の説明文
 //}
 
+当初タグは、LocalEntityとしてSessionの中にList<String>として埋め込んでいました。
+しかし、タグで検索したいとの追加要望を受け、切り出しました。
+
 //table[TagTable][Tag]{
 属性名  型  説明
 --------------------
 Id	Int	.
 Name	String	タグの名前
 //}
+
+ニュース記事は、Articleとしました。
+公開予約をしたいとの追加要望をいただいたため、属性として保持していたPublishedAtを使って公開制御することとしました。
 
 //table[ArticleTable][Article]{
 属性名  型  説明
@@ -105,6 +123,10 @@ data class Session(
 )
 //}
 
+slideUrlとmovieUrlは発表後に追加されるため、Optionalとしています。
+他も同様に定義をそのままdata classにすることで実装しています。
+明らかなため、ここでは省略させていただきます。
+
 ===[column] Kotlin MPPとは
 Kotlin MPPとは、Kotlin Multi Platformの略称です。
 Kotlinで書かれたコードをAndroidだけでなく、iOS/Web/Serverなど様々なPlatformで実行することができます。
@@ -133,12 +155,61 @@ internal actual fun writeLogMessage(message: String, logLevel: LogLevel) {
 //}
 
 このようにして、javaとjavascript双方で動くコードを実装することができます。
-裏側を共通化し、UIに関わる部分をSwiftUIなどPlatform固有の実装を行いやすくなっています。
+裏側を共通化し、UIに関わる部分をSwiftUIなどPlatform固有の実装を行うことができます。
 全Platformでの共通処理であるドメインモデルの実装に最適と考えました。
 
 ===[/column]
 
 == Serverからの利用
+DatabaseにはMySQLを利用しました。
+複数のスピーカーで1つのセッションを行うことがあります。
+また、1名のスピーカーが複数のセッションを行うことがあります。
+つまり、スピーカーとセッションは多対多の関係です。
+そこで、関係を保持するテーブルを作成しました。
+タグも同様に多対多ですので、関係テーブルを作成しました。
+
+//listnum[Database][sql]{
+CREATE TABLE `Sessions` (
+      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+      `start_time` int(10) unsigned NOT NULL,
+      `end_time` int(10) unsigned NOT NULL,
+      `title` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL,
+      `description` varchar(4096) CHARACTER SET utf8mb4 DEFAULT NULL,
+      `slide_url` varchar(1024) CHARACTER SET utf8mb4 DEFAULT NULL,
+      `movie_url` varchar(1024) CHARACTER SET utf8mb4 DEFAULT NULL,
+      PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+CREATE TABLE `Speakers` (
+      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+      `name` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL,
+      `title` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL,
+      `github_id` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL,
+      `twitter_id` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL,
+      `description` varchar(4096) CHARACTER SET utf8mb4 DEFAULT NULL,
+      PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+CREATE TABLE `SpeakerRelations` (
+      `session_id` int(10) unsigned NOT NULL,
+      `speaker_id` int(10) unsigned NOT NULL,
+      PRIMARY KEY (`session_id`,`speaker_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+CREATE TABLE `Tags` (
+      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+      `name` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL,
+      PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+CREATE TABLE `TagRelations` (
+      `session_id` int(10) unsigned NOT NULL,
+      `tag_id` int(10) unsigned NOT NULL,
+      PRIMARY KEY (`session_id`,`tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+//}
+
+
 DBから取得したデータを共通のドメインモデルに詰め替えてクライアント側に送信します。
 Kotlin MPPを使って作られていたKotlinFest公式アプリではセッション、スピーカーの全データを応答し、Client側でjoinしていました。
 しかし、このアプリではデータ整形をサーバ側責務と考え、サーバ側でjoinして応答しました。
@@ -194,6 +265,8 @@ class SessionService {
     }
 }
 //}
+
+
 
 == Clientからの利用
 iOS及びAndroidからは、共通処理としてKtor HttpClientを使ってドメインモデルにマッピングする処理を実装しました。
