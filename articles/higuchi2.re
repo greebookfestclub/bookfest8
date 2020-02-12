@@ -104,7 +104,7 @@ PublishedAt	Timestamp	公開日時。現在時刻より過去の記事のみ表�
 
 ドメインモデルは、シンプルにdata classとして実装します。
 
-//listnum[SessionModel][kotlin]{
+//listnum[SessionModel][SessionModel][kotlin]{
 package jp.gree.techcon.common.model
 
 import kotlinx.serialization.Serializable
@@ -132,19 +132,19 @@ Kotlin MPPとは、Kotlin Multi Platformの略称です。
 Kotlinで書かれたコードをAndroidだけでなく、iOS/Web/Serverなど様々なPlatformで実行することができます。
 例えば、共通コードに次のようなinterfaceを作ります。
 
-//listnum[WriteLog][kotlin]{
+//listnum[WriteLog][WriteLog][kotlin]{
 internal expect fun writeLogMessage(message: String, logLevel: LogLevel)
 //}
 
 javaとjavascript用の実装を次のように書きます。
 
-//listnum[KotlinWriteLog][java]{
+//listnum[KotlinWriteLog][KotlinWriteLog][java]{
 internal actual fun writeLogMessage(message: String, logLevel: LogLevel) {
     println("[$logLevel]: $message")
 }
 //}
 
-//listnum[JSWriteLog][javascript]{
+//listnum[JSWriteLog][JSWriteLog][javascript]{
 internal actual fun writeLogMessage(message: String, logLevel: LogLevel) {
     when (logLevel) {
         LogLevel.DEBUG -> console.log(message)
@@ -161,14 +161,14 @@ internal actual fun writeLogMessage(message: String, logLevel: LogLevel) {
 ===[/column]
 
 == Serverからの利用
-DatabaseにはMySQLを利用しました。
+DatabaseはMySQLを利用しました。
 複数のスピーカーで1つのセッションを行うことがあります。
 また、1名のスピーカーが複数のセッションを行うことがあります。
 つまり、スピーカーとセッションは多対多の関係です。
 そこで、関係を保持するテーブルを作成しました。
-タグも同様に多対多ですので、関係テーブルを作成しました。
+同様にタグも多対多ですので、関係テーブルを作成しました。
 
-//listnum[Database][sql]{
+//listnum[Database][Database][sql]{
 CREATE TABLE `Sessions` (
       `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
       `start_time` int(10) unsigned NOT NULL,
@@ -209,12 +209,68 @@ CREATE TABLE `TagRelations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 //}
 
+次にDaoを作成します。
+データベースアクセスには、exposedを利用します。
+
+//listnum[SessionDao][SessionDao][kotlin]{
+package jp.gree.techcon.server.dao
+
+import org.jetbrains.exposed.dao.IntIdTable
+
+object Sessions : IntIdTable() {
+    val startTime = integer("start_time")
+    val endTime = integer("end_time")
+    val title = varchar("title", 128)
+    val description = varchar("description", 4096)
+    val slideUrl = varchar("slide_url", 1024)
+    val movieUrl = varchar("movie_url", 1024)
+}
+
+import org.jetbrains.exposed.sql.Table
+
+object SpeakerRelations : Table() {
+    val session = reference("session_id", Sessions).primaryKey(0)
+    val speaker = reference("speaker_id", Speakers).primaryKey(1)
+}
+
+object TagRelations : Table() {
+    val session = reference("session_id", Sessions).primaryKey(0)
+    val tag = reference("tag_id", Tags).primaryKey(1)
+}
+//}
+
+次にEntityを定義します。
+exposedではvia Daoと書くと、関係テーブルを使って取得したオブジェクトを格納してくれます。
+
+//listnum[SessionEntity][SessionEntity][kotlin]{
+package jp.gree.techcon.server.entity
+
+import jp.gree.techcon.server.dao.Sessions
+import jp.gree.techcon.server.dao.SpeakerRelations
+import jp.gree.techcon.server.dao.TagRelations
+import org.jetbrains.exposed.dao.EntityID
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+
+class Session(id: EntityID<Int>) : IntEntity(id) {
+    companion object: IntEntityClass<Session>(Sessions)
+
+    var startTime by Sessions.startTime
+    var endTime by Sessions.endTime
+    var title by Sessions.title
+    var description by Sessions.description
+    var slideUrl by Sessions.slideUrl
+    var movieUrl by Sessions.movieUrl
+    var speakers by Speaker via SpeakerRelations
+    var tags by Tag via TagRelations
+}
+//}
 
 DBから取得したデータを共通のドメインモデルに詰め替えてクライアント側に送信します。
 Kotlin MPPを使って作られていたKotlinFest公式アプリではセッション、スピーカーの全データを応答し、Client側でjoinしていました。
 しかし、このアプリではデータ整形をサーバ側責務と考え、サーバ側でjoinして応答しました。
 
-//listnum[SessionService][kotlin]{
+//listnum[SessionService][SessionService][kotlin]{
 package jp.gree.techcon.server.service
 
 import jp.gree.techcon.server.entity.*
@@ -266,13 +322,17 @@ class SessionService {
 }
 //}
 
+16行目でsessionの全データを取得しています。
+34行目でcommonで定義している共通のドメインモデルに詰め替えて応答しています。
+同様に19行目でspeakerを、29行目でtagを詰め替えています。
+共通モデルに詰め替えることにより、Client側も共通モデルを使うことができます。
 
 
 == Clientからの利用
 iOS及びAndroidからは、共通処理としてKtor HttpClientを使ってドメインモデルにマッピングする処理を実装しました。
 これをそれぞれのViewModelに詰め替えて表示を行います。
 
-//listnum[Api][kotlin]{
+//listnum[Api][Api][kotlin]{
 package jp.gree.techcon.common.datasource.network
 
 import io.ktor.client.HttpClient
