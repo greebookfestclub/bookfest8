@@ -2,8 +2,9 @@
 
 ==== 白井暁彦 / @<href>{https://twitter.com/o_ob,@o_ob} (@<chap>{shirai})
 
-R&D in VR live entertainment since 1995. SNSやゲームの会社でVTuberやVRエンタメを研究開発する研究所のDirectorです。
-研究開発やコラボ、出張ワークショップなどご相談は @VRStudioLab までどうぞ。
+GREE VR Studio Lab, Director。博士（工学）／東京工業大学 知能システム科学。
+専門はVRエンターテインメントシステム、触覚技術、GPU応用、多重化ディスプレイ技術、プレイヤー体験の物理評価、国際連携。デジタルハリウッド大学大学院 客員教授。
+著書「WiiRemoteプログラミング」、「白井博士の未来のゲームデザイン -エンターテインメントシステムの科学-」など。
 
 ==== 水野博文 /  (@<chap>{mizuno})
 
