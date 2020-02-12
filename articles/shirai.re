@@ -312,9 +312,24 @@ pyEmoAnalysis.on('message', data => {
     // client側にデータを送信
     io.emit('send_EmoAna_Result', obj) 
 })
+//}
 
+//list[MicPC-index.js][client.js（音響分析PC）]{
+// socket接続をし、index.jsから送られてきた解析結果を同socketに存在する別のclientに送信する
 
+//localのindex.jsと接続するためのsocket。何らかのブラウザで下記URLを開くことで接続される。
+const LocalSocket = io.connect('http://localhost:3000'); //サーバーと同じポートを指定すること
 
+// Main,OMENそれぞれのindex.jsで起動しているポートないしURLを入力すること
+const MainSocket = io.connect('https://main.jp.ngrok.io/');
+const OMENSocket = io.connect('https://omen.jp.ngrok.io/');
+
+// index.jsから送られてきた解析結果をそのまま接続されているsocketのclientに送る
+LocalSocket.on('send_EmoAna_Result', (obj) => {
+    console.log(obj)
+    MainSocket.emit('send_EmoAna_Result', obj)
+    OMENSocket.emit('send_EmoAna_Result', obj)
+})
 //}
 
 上記の main.py で呼ばれる音声分析系はこんなかんじです。
