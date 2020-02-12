@@ -2,15 +2,12 @@ PREDEF:
   - preface.re
 
 CHAPS:
-  - endo.re
-  - higuchi2.re
   - shirai.re
   - mizuno.re
+  - endo.re
+  - higuchi2.re
   - ando.re
 
-APPENDIX:
-  - appendix.re
-
 POSTDEF:
-  - bib.re
+  - pr.re
   - contributors.re
