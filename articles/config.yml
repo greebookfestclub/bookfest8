@@ -25,7 +25,7 @@ language: ja
 booktitle: {name: "グリー技術書典部誌2020年春号", file-as: "グリー技術書典部誌2020年春号"}
 
 # 著者名。「, 」で区切って複数指定できる
-aut: [{name: "白井暁彦", file-as: "白井暁彦"},{name: "水野博文", file-as: "水野博文"},{name: "遠藤辰弥", file-as: "遠藤辰弥"},{name: "樋口雅拓", file-as: "樋口雅拓"},{name: "安藤直也", file-as: "安藤直也"}]
+aut: [{name: "白井暁彦", file-as: "白井暁彦"},{name: "水野博文", file-as: "水野博文"},{name: "遠藤辰弥", file-as: "遠藤辰弥"},{name: "樋口雅拓", file-as: "樋口雅拓"},{name: "N&A", file-as: "N&A"}]
 
 # 以下はオプション
 # 以下はオプション(autと同じように配列書式で複数指定可能)。

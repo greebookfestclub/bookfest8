@@ -2,6 +2,11 @@
 
 
 #@# 白井の原稿から
+//bibpaper[Wantedly][【完全版】 Vtuberに100億って実際何につかってるの？－弊社代表DJ RIOのブログより]{
+松田 優里菜 on Wantedly, 
+2020/01/28,
+https://www.wantedly.com/companies/wrightflyer/post_articles/205480
+}
 
 //bibpaper[RexIVA][Evaluation of Avatar and Voice Transform in Programming E-Learning Lectures]{
 Rex Hsieh, Akihiko Shirai, and Hisashi Sato. 2019.,
@@ -11,15 +16,15 @@ DOI:https://doi.org/10.1145/3308532.3329430
 //}
 
 
+//bibpaper[SA18RTL][“REALITY: Be yourself you want to be” VTuber and presence technologies in live entertainment which can make interact between smartphone and virtual live characters]{
+https://sa2018.siggraph.org/en/attendees/real-time-live,
+https://sa2018.conference-program.com/presentation/?id=gp_148&sess=sess252
+//}
+
 //bibpaper[CSR20190322][子どもたちが実践したVR for good、VTuberの可能性 －2018年度千葉大学共同授業 総括－]{
 グリー株式会社コーポレートブログ，
 2019/03/22，
 https://corp.gree.net/jp/ja/news/blog/2019/03/06.html
-//}
-
-//bibpaper[SA18RTL][“REALITY: Be yourself you want to be” VTuber and presence technologies in live entertainment which can make interact between smartphone and virtual live characters]{
-https://sa2018.siggraph.org/en/attendees/real-time-live,
-https://sa2018.conference-program.com/presentation/?id=gp_148&sess=sess252
 //}
 
 //bibpaper[CCSE2019][#CCSE2019 GREE VR Studio Lab 「VTuber向け特殊表情コントローラの可能性と機械学習的アプローチ」(速公開版)]{
