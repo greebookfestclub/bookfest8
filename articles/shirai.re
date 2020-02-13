@@ -307,13 +307,12 @@ WebSocketを扱うことができるNode.jsのライブラリ「Socket.IO」を�
 
 //list[MicPC-index.js][index.js（音響分析PC）]{
 const { PythonShell } = require('python-shell'); //pythonをnodeから起動する
-const express = require('express');
-const app = express();
 const socketio = require('socket.io')
 app.use(express.static('public'));
-const expressServer = app.listen(3000); //clientのポート番号（localhost:3000)
+const expressServer = app.listen(3000); 
 const io = socketio(expressServer); 
-var python_script_path = '../../EmotionAnalysis/'; //実行するpython script
+var python_script_path = '../../EmotionAnalysis/'; //実行するpython scriptの場所
+
 let pyEmoAnalysis = new PythonShell(
     'main.py', { mode: 'text', pythonOptions: ['-u'],
     scriptPath: python_script_path });
@@ -322,7 +321,26 @@ let pyEmoAnalysis = new PythonShell(
 pyEmoAnalysis.on('message', data => {
     obj = JSON.parse(data)
     console.log(obj)
+    // client側にデータを送信
     io.emit('send_EmoAna_Result', obj) 
+})
+//}
+
+//list[MicPC-index.js][client.js（音響分析PC）]{
+// socket接続をし、index.jsから送られてきた解析結果を同socketに存在する別のclientに送信する
+
+//localのindex.jsと接続するためのsocket。何らかのブラウザで下記URLを開くことで接続される。
+const LocalSocket = io.connect('http://localhost:3000'); //サーバーと同じポートを指定すること
+
+// Main,OMENそれぞれのindex.jsで起動しているポートないしURLを入力すること
+const MainSocket = io.connect('https://main.jp.ngrok.io/');
+const OMENSocket = io.connect('https://omen.jp.ngrok.io/');
+
+// index.jsから送られてきた解析結果をそのまま接続されているsocketのclientに送る
+LocalSocket.on('send_EmoAna_Result', (obj) => {
+    console.log(obj)
+    MainSocket.emit('send_EmoAna_Result', obj)
+    OMENSocket.emit('send_EmoAna_Result', obj)
 })
 //}
 
@@ -359,7 +377,7 @@ VCI→他のシステムへの通信はWebSocket通信を使って実装しま�
 逆に他のシステム→VCIへのイベントは、キーボード信号を使って実装することにします。
 具体的には pyAutokey という Pythonライブラリを使って、VCを使っているPCのキーイベントを発生させて、VC側ではそのキーイベントを拾います。
 
-//list[MainPCindex.js][自動マウス＆キー操作用のpythonプログラムのセットアップ]{
+//list[MainPCindex.js][自動マウス＆キー操作（node.js)]{
 let pyAutoKey = new PythonShell('autokey.py',
  { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
 // 自動キー入力を行う閾値
@@ -368,27 +386,52 @@ var Lo_Threshold = 0.4
 
 //io.on→socketが接続されたとき起動
 io.on('connection', (socket) => {
-    console.log('made socket connection', socket.id);
-    socket.on('echo', (arg) => {
-        console.log(arg)
-    })
-    socket.on('disconnect', () => {
-        console.log('disconnect');
-    });
-
-    // mapするときの最大値を決定。最大値との比率で値を決める
+    // 解析結果が飛んで来たら実行
     socket.on('send_EmoAna_Result', (obj) => {
         var Applause_fromMax = 0.13
         var Laugh_fromMax = 0.02
         // まず得られた解析結果を0 ~ 指定した最大値の範囲（範囲A）に限定する。
         // その後、範囲Aを0~1の範囲にマッピングする
-        obj.L_L = map(value_limit((obj.L_L - 0.001), 0,
-         Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
-        obj.L_A = map(value_limit((obj.L_A - 0.04), 0,
-         Applause_fromMax), 0, Applause_fromMax, 0, 1)
-        io.emit('tc2client', obj)
-    });
+        obj.L_L = map(value_limit((obj.L_L - 0.001), 0, Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
+        obj.L_A = map(value_limit((obj.L_A - 0.04), 0, Applause_fromMax), 0, Applause_fromMax, 0, 1)
+        // マッピング後の解析結果が閾値を超えたらマウスを(100,100)に動かし、指定のキー入力を動作させる
+        // 起動後マウスとキー入力を奪われるので、本番以外はコメントアウト推奨
+        // 止めたいときは、Alt + Ctrl + Delete を押せば止まる
+        // 1 紙吹雪、2 パオズ 3・4 Hapbeat(vci)の帯の色を戻す
+        // ---------------------------------------------------------------------
+        if (obj.L_L > Hi_Threshold) {
+            pyAutoKey.send(String(2))
+        } else if (Lo_Threshold < obj.L_L && obj.L_L < Hi_Threshold) {
+            pyAutoKey.send(String(2))
+        } else {
+            pyAutoKey.send(String(4))
+        }
+        if (obj.L_A > Hi_Threshold) {
+            pyAutoKey.send(String(1))
+        } else if (Lo_Threshold < obj.L_A && obj.L_A < Hi_Threshold) {
+            pyAutoKey.send(String(1))
+        } else {
+            pyAutoKey.send(String(3))
+        }
+     });
 });
+//}
+
+//list[MainPCindex.js][自動マウス＆キー操作（python)]{
+import pyautogui as pgui
+
+def testKey(key):
+    pgui.click(100, 100)
+    pgui.typewrite(key)
+
+def main():
+    while True:
+        key = input()
+        if key == "1" or key == "2" or key == "3" or key == "4":
+            testKey(key)
+        
+if __name__ == "__main__":
+    main()
 //}
 
 マッピング後の解析結果が閾値を超えたらマウスを (100,100）に動かし、指定のキー入力を動作させます。
@@ -407,19 +450,14 @@ io.on('connection', (socket) => {
 ローカル環境上で実行しているアプリケーションの通信をインターネット経由で動作するようにしています。
 これは会場のネットワーク、特にWifiが数千人の国際イベントではまともに動作しないことを想定し、LTE等の公衆回線を使うことを想定した設計です。
 
-//list[OMEN-index.js1][VCからのメッセージを送ってマイコンでLED光らせる index.js（前半）]{
+//list[OMEN-index.js1][ngrok起動(node module使用)]{
 const express = require('express');
-const socket = require('socket.io');
-const { PythonShell } = require('python-shell'); // varを{}で囲むのが重要らしい
-
-// サーバー立ち上げ
 var app = express();
-const PORT = process.env.PORT || 4000 //環境変数orPort4000
+const PORT = process.env.PORT || 4000
 var server = app.listen(PORT, () => {
     console.log('listening to requests on port ' + PORT)
 });
 
-//ngrokで起動したいとき（port80)
 const ngrok = require('ngrok')
 
 connectNgrok().then(url => {
@@ -439,9 +477,8 @@ async function connectNgrok() {
 
 M5Stackは中々優秀なのですが、通信を文字で行うと流石に重たく、24個のフルカラーLEDが美しく光ってくれないので、intをうまく使って3種類の点灯モードと強度を詰め込んでいきます。
 
-//list[OMEN-index.js2][VCからのメッセージを送ってマイコンでLED光らせる index.js（後半）]{
+//list[OMEN-index.js2][VCからのメッセージを送ってマイコンでLED光らせる index.js]{
 // Socket setup
-var io = socket(server);
 var L_Top2Bot = 200 //数字の説明：xyz, y = 左右（左＝0、右＝1）
 R_Top2Bot = 210
 L_Bot2Top = 201
@@ -459,10 +496,43 @@ Start_HB = 250
 Stop_HB = 251
 
 var LED_Mode = 1; //LEDが光るモード。0にすると拍手・笑いをdisable
+
 let pySendSerial = new PythonShell('sendserial.py',
  { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
 pySendSerial.on('message', data => {
     console.log(data)
+})
+
+// VCからのメッセージ(print())を受け取りM5Stackにシリアル通信を行う
+//(VC非起動時はエラーになるのでコメントアウトする)
+// -----------------------------------------------------------
+const vci_logcat = require('./vci-logcat/bin/vci-logcat')
+var vci = vci_logcat.vciEmitter
+vci.on('print', (arg) => {
+    console.log(arg);
+    if (arg == 'hit2apple') {
+        pySendSerial.send(String(Random_Rainbow))
+    }
+    if (arg == 'hit2body') {
+        pySendSerial.send(String(hit2body))
+    }
+    if (arg == 'HugOn') {
+        pySendSerial.send(String(Start_HB)) //鼓動表現。一定の周期で光らせる
+    }
+    if (arg == 'HugExit') {
+        pySendSerial.send(String(Stop_HB)) //
+    }
+    if (arg == 'enableLEDmeter') { // 笑い、拍手にLEDを反応させる
+        LED_Mode = 1
+        console.log("enabled")
+    }
+    if (arg == 'disableLEDmeter') { // 笑い、拍手にLEDが反応させない
+        LED_Mode = 0
+        console.log("disabled")
+    }
+    if (arg == 'Handshaked') {
+        pySendSerial.send(String(HandShaked))
+    }
 })
 
 // 値の範囲を変換する関数。例：(5,0,10,0,100) => return 50
@@ -481,6 +551,28 @@ const map = (value, fromMin, fromMax, toMin, toMax) => {
 function value_limit(val, min, max) {
     return val < min ? min : (val > max ? max : val);
 }
+
+// 音響解析結果の値をLEDの数に再マップし,intに直してM5Stackに送信する
+io.on('connection', (socket) => {
+    socket.on('send_EmoAna_Result', (obj) => {
+        // mapするときの最大値を決定。最大値との比率で値を決める（設定した最大値以上で１、それ以外は0~1）
+        var Applause_fromMax = 0.13
+        var Laugh_fromMax = 0.02
+        obj.L_L = map(value_limit((obj.L_L - 0.001), 0, Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
+        obj.L_A = map(value_limit((obj.L_A - 0.04), 0, Applause_fromMax), 0, Applause_fromMax, 0, 1)
+        console.log(obj);
+        io.emit('tc2client', obj)
+        //EmoAnaから入ってきた0~1の解析結果をLEDの数（0~28）に再マップ
+        L_L_barheight = Math.round(map(obj.L_L, 0, 1, 0, 28))
+        L_A_barheight = Math.round(map(obj.L_A, 0, 1, 0, 28)) + 30
+
+        pySendSerial.send(String(L_L_barheight))
+        pySendSerial.send(String(L_A_barheight))
+
+        pySendSerial.send(String(L_MeterLED))
+        pySendSerial.send(String(R_MeterLED))
+    });
+})
 //}
 
 会場で笑いや拍手が起きると、両脇のカラーLEDが3種類のパターンでカラフルに明滅します。
