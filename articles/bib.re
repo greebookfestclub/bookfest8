@@ -53,3 +53,8 @@ VRonWEBMEDIA，
 2019年11月19日，
 https://vron.jp/2019/11/19/real-time-live/
 //}
+
+//bibpaper[SIG19Yamazaki][Neck strap haptics: an algorithm for non-visible VR information using haptic perception on the neck]{
+Yusuke Yamazaki, Shoichi Hasegawa, Hironori Mitake, and Akihiko Shirai. 2019,
+In ACM SIGGRAPH 2019 Posters (SIGGRAPH ’19). Association for Computing Machinery, New York, NY, USA, Article 60, 1–2. DOI:https://doi.org/10.1145/3306214.3338562
+//}
