@@ -46,3 +46,13 @@ VRonWEBMEDIA，
 2019年11月19日，
 https://vron.jp/2019/11/19/real-time-live/
 //}
+
+#@# mizuno citation
+//bibpaper[giopt][Shuhei Fujiwara, 2019]{
+Shuhei Fujiwara(2019). 技術書典のサークル配置最適化 https://speakerdeck.com/shuheif/tbf07-seat-optim
+//}
+
+//bibpaper[pulp][PuLP documentation team, 2009]{
+PuLP documentation team(2009). Optimization with PuLP https://pythonhosted.org/PuLP/
+//}
+
