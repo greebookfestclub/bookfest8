@@ -191,6 +191,9 @@ NTTドコモ副島義貴さんと、ラボの発信活動でご協力いただ�
 非対称な振動を提示することで方向や距離など、表現できる情報が非常に広く、効果音のような短い振動用の波形を挿入することで、
 左右交互にトントン、とした打感を提示することも簡単にできます。
 
+//image[HapticMinesweeper][目に見えない物体の方向を感じられる「Haptic Minesweeper」体験の様子（@<href>{https://www.youtube.com/watch?v=AgmFWBu5ZnM}）]{
+//}
+
 VR Studio LabではこのHapbeat-Duoをベースに、VRゲームやライブエンタテイメントなどに利用できる触覚アルゴリズム多数開発しています。
 たとえばHMDを装着したユーザーに距離や方向を触覚で提示することもできます。
 「Haptic Minesweeper」として、IEEE World Haptics 2019で発表しており@<bib>{SIG19Yamazaki}、UE4とOculus Questで動作するデモを動画公開しています（@<href>{https://www.youtube.com/watch?v=AgmFWBu5ZnM}）。

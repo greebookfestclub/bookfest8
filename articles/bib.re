@@ -58,3 +58,13 @@ https://vron.jp/2019/11/19/real-time-live/
 Yusuke Yamazaki, Shoichi Hasegawa, Hironori Mitake, and Akihiko Shirai. 2019,
 In ACM SIGGRAPH 2019 Posters (SIGGRAPH ’19). Association for Computing Machinery, New York, NY, USA, Article 60, 1–2. DOI:https://doi.org/10.1145/3306214.3338562
 //}
+
+#@# mizuno citation
+//bibpaper[giopt][Shuhei Fujiwara, 2019]{
+Shuhei Fujiwara(2019). 技術書典のサークル配置最適化 https://speakerdeck.com/shuheif/tbf07-seat-optim
+//}
+
+//bibpaper[pulp][PuLP documentation team, 2009]{
+PuLP documentation team(2009). Optimization with PuLP https://pythonhosted.org/PuLP/
+//}
+
