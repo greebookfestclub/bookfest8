@@ -9,5 +9,6 @@ CHAPS:
   - ando.re
 
 POSTDEF:
+  - bib.re
   - pr.re
   - contributors.re
