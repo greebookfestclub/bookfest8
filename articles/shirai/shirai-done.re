@@ -462,7 +462,7 @@ io.on('connection', (socket) => {
 なおこのpyAutokeyを起動後はマウスとキー入力を奪われるので、本番以外はコメントアウト推奨です。
 止めたいときは、Alt + Ctrl + Delete を押せば止まりますが、知らない人が触るとパニックになります。
 
-//list[MainPCindex.js]MainPCで走る自動マウス＆キー操作処理（ Python ）]{
+//list[MainPCindex.js-py][MainPCで走る自動マウス＆キー操作処理（ Python ）]{
 import pyautogui as pgui
 
 def testKey(key):
