@@ -227,8 +227,152 @@ VRChatほどではないですが、音声品質と同時性保証の面では�
 #@end
 
 
-#@# #@mapfile(shirai/shirai-working.re)
-#@# #@end
+=== M5Stackによる触覚の可視化
+//image[REMOPRE1117][REMOPRE1117]{
+//}
+
+
+筆者が背負っているPC（HP OMENX）の中で動いている Node.js サーバのコード（index.js）はこんなかんじです。
+MicPCから送られてきた解析結果をマッピングして、VCのデバッグ情報をWebsocketで受け取ります。
+それらの値をトリガーとして、M5Stackにシリアル通信でコマンドを送りLEDを光らせます。
+
+なお、すべてクラウド環境で動作したい設計なので、ngrok（エングロック）を使ってトンネル化し、
+ローカル環境上で実行しているアプリケーションの通信をインターネット経由で動作するようにしています。
+これは会場のネットワーク、特にWifiが数千人の国際イベントではまともに動作しないことを想定し、LTE等の公衆回線を使うことを想定した設計です。
+
+//list[OMEN-index.js1][ngrok起動(node module使用)]{
+const express = require('express');
+var app = express();
+const PORT = process.env.PORT || 4000
+var server = app.listen(PORT, () => {
+    console.log('listening to requests on port ' + PORT)
+});
+
+const ngrok = require('ngrok')
+
+connectNgrok().then(url => {
+    console.log('URL : ' + url);
+});
+async function connectNgrok() {
+    let url = await ngrok.connect({
+        addr: 4000, // port or network address, defaults to 80
+        subdomain: 'omen', // reserved tunnel name https://alex.ngrok.io
+        authtoken: '***', // your authtoken from ngrok.com
+        region: 'jp', // one of ngrok regions (us, eu, au, ap), defaults to us
+    });
+    return url;
+}
+//}
+
+
+M5Stackは中々優秀なのですが、通信を文字で行うと流石に重たく、24個のフルカラーLEDが美しく光ってくれないので、intをうまく使って3種類の点灯モードと強度を詰め込んでいきます。
+
+//list[OMEN-index.js2][VCからのメッセージを送ってマイコンでLED光らせる index.js]{
+// Socket setup
+var L_Top2Bot = 200 //数字の説明：xyz, y = 左右（左＝0、右＝1）
+R_Top2Bot = 210
+L_Bot2Top = 201
+R_Bot2Top = 211
+L_Center2Edge = 202
+R_Center2Edge = 212
+L_Edge2Center = 203
+R_Edge2Center = 213
+L_MeterLED = 204
+R_MeterLED = 214
+Random_Rainbow = 205
+HandShaked = 206
+hit2body = 207
+Start_HB = 250
+Stop_HB = 251
+
+var LED_Mode = 1; //LEDが光るモード。0にすると拍手・笑いをdisable
+
+let pySendSerial = new PythonShell('sendserial.py',
+ { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
+pySendSerial.on('message', data => {
+    console.log(data)
+})
+
+// VCからのメッセージ(print())を受け取りM5Stackにシリアル通信を行う
+//(VC非起動時はエラーになるのでコメントアウトする)
+// -----------------------------------------------------------
+const vci_logcat = require('./vci-logcat/bin/vci-logcat')
+var vci = vci_logcat.vciEmitter
+vci.on('print', (arg) => {
+    console.log(arg);
+    if (arg == 'hit2apple') {
+        pySendSerial.send(String(Random_Rainbow))
+    }
+    if (arg == 'hit2body') {
+        pySendSerial.send(String(hit2body))
+    }
+    if (arg == 'HugOn') {
+        pySendSerial.send(String(Start_HB)) //鼓動表現。一定の周期で光らせる
+    }
+    if (arg == 'HugExit') {
+        pySendSerial.send(String(Stop_HB)) //
+    }
+    if (arg == 'enableLEDmeter') { // 笑い、拍手にLEDを反応させる
+        LED_Mode = 1
+        console.log("enabled")
+    }
+    if (arg == 'disableLEDmeter') { // 笑い、拍手にLEDが反応させない
+        LED_Mode = 0
+        console.log("disabled")
+    }
+    if (arg == 'Handshaked') {
+        pySendSerial.send(String(HandShaked))
+    }
+})
+
+// 値の範囲を変換する関数。例：(5,0,10,0,100) => return 50
+const map = (value, fromMin, fromMax, toMin, toMax) => {
+    let result = 0;
+    result = (value <= fromMin)
+        ? toMin : (value >= fromMax)
+            ? toMax : (() => {
+                let ratio = (toMax - toMin) / (fromMax - fromMin);
+                return (value - fromMin) * ratio + toMin;
+            })();
+    return result;
+};
+
+// 値の範囲をmin~maxの間で制限する関数。例：(5,0,4) => return 4
+function value_limit(val, min, max) {
+    return val < min ? min : (val > max ? max : val);
+}
+
+// 音響解析結果の値をLEDの数に再マップし,intに直してM5Stackに送信する
+io.on('connection', (socket) => {
+    socket.on('send_EmoAna_Result', (obj) => {
+        // mapするときの最大値を決定。最大値との比率で値を決める（設定した最大値以上で１、それ以外は0~1）
+        var Applause_fromMax = 0.13
+        var Laugh_fromMax = 0.02
+        obj.L_L = map(value_limit((obj.L_L - 0.001), 0, Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
+        obj.L_A = map(value_limit((obj.L_A - 0.04), 0, Applause_fromMax), 0, Applause_fromMax, 0, 1)
+        console.log(obj);
+        io.emit('tc2client', obj)
+        //EmoAnaから入ってきた0~1の解析結果をLEDの数（0~28）に再マップ
+        L_L_barheight = Math.round(map(obj.L_L, 0, 1, 0, 28))
+        L_A_barheight = Math.round(map(obj.L_A, 0, 1, 0, 28)) + 30
+
+        pySendSerial.send(String(L_L_barheight))
+        pySendSerial.send(String(L_A_barheight))
+
+        pySendSerial.send(String(L_MeterLED))
+        pySendSerial.send(String(R_MeterLED))
+    });
+})
+//}
+
+会場で笑いや拍手が起きると、両脇のカラーLEDが3種類のパターンでカラフルに明滅します。
+実際、演者はHMDを装着しており、会場のリアクションに反応することは難しいのですが、これによって触覚とLEDが双方向性を与えてくれます。
+なお、ステージや会場の遠くからの視認性を確認するために、ハロウィン前夜の六本木ヒルズで実験したりしました。
+
+
+
+#@mapfile(shirai/shirai-working.re)
+#@end
 
 #@mapfile(shirai/column.re)
 #@end
