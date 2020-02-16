@@ -313,7 +313,7 @@ LocalSocket.on('send_EmoAna_Result', (obj) => {
 })
 //}
 
-Main,OMENそれぞれのPCで @<code>{node index.js} を起動し（おススメは VS Code のコンソールで投入します）、ブラウザでURLを入力することで、各PC上で必要となる可視化や通信が行われる仕組みになっています。
+Main,OMENそれぞれのPCで @<cmd>{node index.js} を起動し（おススメは VS Code のコンソールで投入します）、ブラウザでURLを入力することで、各PC上で必要となる可視化や通信が行われる仕組みになっています。
 
 === VCI と node.js を使ったVirtual Castの拡張
 
