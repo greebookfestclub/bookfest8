@@ -216,3 +216,113 @@ VRChatほどではないですが、音声品質と同時性保証の面では�
 なおSA19RTLと並列の時間進行で、VC側も新しい仕組みを試しているところでした（@<href>{https://virtualcast.jp/blog/2019/10/virtualcastroadmap/}）。
 詳しい話は割愛しますが、最終的な判断には音声の同時発声と音声品質、通信帯域、そして装置構成やスタッフの手の数も含めた技術的安定など複雑な要素が絡み合い、難度が高い要素でした。
 
+===パフォーマンスの設計
+//image[TokyoBrisbane][SA19RTLティザー動画より。左側の2人は東京、右側はブリスベンにいるという設定。1ショットの画像でわかりやすくするために本番前の実験を繰り返し、絵コンテ・レイアウトレベルで調整を重ねる。]{
+//}
+
+まずは当初の提案レベルの暫定シナリオです。原作は英語ですが「7分にどう詰め込むか」という視点で詰め込んでいきます。
+
+//tsize[30,60]
+//table[scenario1][当初提案シナリオ（7分）]{
+時間	内容
+-------------------------------------------------------------
+0-1分	[はじめに]各言語で挨拶と自己紹介。メインMCは会場（ブリスベン）にあり、他のキャラクターとスタジオは東京にあることを伝える。
+1-2分	[私たちは離れている]ビデオ会議風のビジュアルで、スマートフォンで現地時間とGPS（Googleマップ）を表示。ストリーミングのラグを表示（予測では片側で20〜40秒の遅延がある）。
+2-3分	[双方向リモート触覚ライブ]オーディオチャネルを使用したHapbeatエクスペリエンスをデモ。メインMC、審査員など一部の観客がHapbeatデバイスを装着しYouTubeライブストリーミング視聴。じゃんけんをします。
+3-4分	[安定性、互換性、および利便性] YouTube Liveパイプラインとの適合性と互換性を示す。
+4-5分	[多言語での感情との相互作用]リアルタイムの翻訳で観客の顔、拍手、歓声を分析できるリアルタイムの感情分析を使って、視覚化されたデータとリアルタイム翻訳で会場の観客全員と交流。
+5-6分	[ダンスプレイ]フィナーレ。ダンスプレイで観客を次世代のライブエンターテイメントに連れていく。
+//}
+
+その後、採択時に審査員からのフィードバックがあります。
+「この提案はまさにRTL向きだね！」という感じで、おおむね好評価。
+その後は、各要素のフィージビリティや意味合い、最終的な持ち時間（各チーム10分）にあわせて、
+パフォーマンスシナリオを設計していきます。
+
+採択からチーム編成までの機関で、VCを活用することが決定しましたので、
+9月10日ぐらいの段階でこんな感じのシナリオになりました。
+ちなみにこのような進行の構成要素と時間配分を記載した台本を「構成台本」と呼びます。
+
+//tsize[30,60]
+//table[scenario2][本番10週間前時点のシナリオ（10分）]{
+時間	内容
+-------------------------------------------------------------
+0-1分	あいさつ
+1-2分	システムについて（豪州側バーチャルキャストに日本から凸する）
+2-3分	ミルキークイーンが英語で通訳しながら直感アルゴリズムKirinが日本語、Xiが中国語（計3人）がVTuber文化とファンとのコミュニケーションについて語る
+3-6分	パオズゲーム：白井が「会場で拍手をすると画面端のメーターがあがります」と紹介。右ウイングと左ウイングで拍手がなるたびにパオズが落ちてくる。「多いほうが勝ち！」その後「笑いでも何か落ちてきます」。
+5-6分	バーチャル・ウィリアムテル：日→豪で頭上のリンゴを弓で射る。
+6-7分	六本木で開催されたTIFFのようす（VR-HMD-5Gライブの記録ビデオ）を紹介、楽曲「520」を踊りエンディング。
+//}
+
+//image[scenario][シナリオ決定稿。画像化してVC内でカンペとして表示するため1枚に凝縮してある。]{
+//}
+
+
+=== VCI を使ったVirtual Castの拡張
+
+VCはそのバーチャル空間に独自の背景や3Dオブジェクト、またそれらにインタラクティブ性を持たせるために独自のスクリプトシステムを有しており「VCI」（Virtual Cast Interactive）と呼ばれています。
+VCIはバーチャルキャスト社公式が配布しているUnityPacageを導入してUnity上で3Dオブジェクトをセットアップし、スクリプトはLua言語を使って書くことができます。
+#@# https://virtualcast.jp/wiki/doku.php?id=vci:script:luatutorial
+
+上記のシナリオに現れる「パオズゲーム」や「バーチャル・ウイリアムテル」は、「直感アルゴリズム」番組中ではVCIを使って実装されています。
+
+コード的にはLuaなのでこんなかんじです（例として紙吹雪を降らせるコードになります）。
+
+//list[Confetti.lua][Confetti.lua 紙吹雪を降らせる]{
+#@mapfile(shirai/Confetti.lua)
+math.randomseed(os.time())
+ConfettiTarget = vci.assets.GetSubItem("ConfettiTarget")
+ConfettiTarget.SetLocalPosition(Vector3.__new(0, 1.5, 0))
+vci.assets._ALL_SetMaterialColorFromName("Transparent",
+ Color.__new(1.0, 1.0, 1.0, 0.5))
+EEConfetti = vci.assets.GetSubItem("EEconfetti")
+gen_height = 0
+size = 1
+ToumeiFlag = 0
+
+function fallConfetti()
+    local rand_xpos = math.random(0, 100) / 100
+    local rand_zpos = math.random(0, 100) / 100
+    local rand_xvel = math.random(-100, 100) / 100
+    local rand_zvel = math.random(-100, 100) / 100
+    local ConfettiTarget_pos = ConfettiTarget.GetLocalPosition()
+    print(ConfettiTarget_pos)
+    local pos = Vector3.__new(ConfettiTarget_pos.x,
+     ConfettiTarget_pos.y + gen_height, ConfettiTarget_pos.z)
+    local scale = Vector3.__new(size, size, size)
+    EEConfetti.SetLocalPosition(pos)
+    EEConfetti.SetLocalScale(scale)
+    vci.assets.GetEffekseerEmitter("EEconfetti")._ALL_Play()
+end
+
+function update()
+    if vci.me.GetButtonInput(1) then
+        fallConfetti()
+    end
+    if vci.me.GetAxisInput().y == 1 then
+        print("enableLEDmeter")
+    end
+    if vci.me.GetAxisInput().y == -1 then
+        print("disableLEDmeter")
+    end
+end
+
+function onUse(use)
+    if use == "ConfettiTarget" then
+        if ToumeiFlag == 0 then
+            vci.assets._ALL_SetMaterialColorFromName(
+                "Transparent", Color.__new(1.0, 0, 1.0, 0.0))
+            ToumeiFlag = 1
+        end
+    end
+end
+#@end
+//}
+
+なお、VC自体の設計思想は「VR」というよりは
+「HMDを使って演じるバーチャルな3Dキャラクターによる放送局のためのシステム」ですので、
+VCIは主にグラフィックスについてのインタラクション、具体的にはシーングラフと衝突、ユーザーによるグラブアクションなどが取得できますが、
+外部システムやデバイスとの通信はできません。
+この先は必要に応じて色々な魔改造?を施していくことになります。
+
