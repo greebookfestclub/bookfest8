@@ -10,6 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: build PDF
-      uses: takahashim/review-pdf-generator-action@master
+      uses: mahiguch/review-pdf-generator-action@master
     - name: upload as Artifacts
-      uses: takahashim/review-pdf-generator-action/upload-artifact@master
+      uses: mahiguch/review-pdf-generator-action/upload-artifact@master

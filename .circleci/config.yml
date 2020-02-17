@@ -20,7 +20,7 @@ jobs:
           command: npm test
       - run:
           name: Build PDF
-          command: npm run pdf
+          command: npm run pdf --force
       - store_artifacts:
           path: ./articles/GREE-BookFest8.pdf
           destination: GREE-BookFest8.pdf
