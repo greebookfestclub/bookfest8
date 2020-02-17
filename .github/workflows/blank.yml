@@ -13,3 +13,5 @@ jobs:
       uses: mahiguch/review-pdf-generator-action@master
     - name: upload as Artifacts
       uses: mahiguch/review-pdf-generator-action/upload-artifact@master
+      env:
+          INPUT_PATH=articles/GREE-BookFest8.pdf
