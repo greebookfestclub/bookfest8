@@ -356,7 +356,7 @@ def realtime_sub(signal, fs):
     applause = an.find_largeapplause(mfcc, threshold[0])
     laugh = an.find_laugh(mfcc, threshold[1])
     excitement = an.excitement_base(stft)
-    return [applause, laugh, excitement]*coefficients
+    return [applause, laugh, excitement]
 //}
 
 ライブラリは PyAudioと librosa が主に使われています。

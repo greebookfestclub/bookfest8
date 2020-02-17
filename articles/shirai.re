@@ -224,6 +224,424 @@ YouTube動画ストリーミングだと4K動画に推奨される帯域が20Mbp
 VRChatほどではないですが、音声品質と同時性保証の面では、ライブエンタメというよりは、ニコニコ動画のような完全にネット視聴型の配信プラットフォームにおける「バーチャルステージとしての統合」という設計思想を感じます。
 なおSA19RTLと並列の時間進行で、VC側も新しい仕組みを試しているところでした（@<href>{https://virtualcast.jp/blog/2019/10/virtualcastroadmap/}）。
 詳しい話は割愛しますが、最終的な判断には音声の同時発声と音声品質、通信帯域、そして装置構成やスタッフの手の数も含めた技術的安定など複雑な要素が絡み合い、難度が高い要素でした。
+
+===パフォーマンスの設計
+//image[TokyoBrisbane][SA19RTLティザー動画より。左側の2人は東京、右側はブリスベンにいるという設定。1ショットの画像でわかりやすくするために本番前の実験を繰り返し、絵コンテ・レイアウトレベルで調整を重ねる。]{
+//}
+
+まずは当初の提案レベルの暫定シナリオです。原作は英語ですが「7分にどう詰め込むか」という視点で詰め込んでいきます。
+
+//tsize[10,90]
+//table[scenario1][当初提案シナリオ（7分）]{
+時間	内容
+-------------------------------------------------------------
+0-1分	[はじめに]各言語で挨拶と自己紹介。メインMCは会場（ブリスベン）にあり、他のキャラクターとスタジオは東京にあることを伝える。
+1-2分	[私たちは離れている]ビデオ会議風のビジュアルで、スマートフォンで現地時間とGPS（Googleマップ）を表示。ストリーミングのラグを表示（予測では片側で20〜40秒の遅延がある）。
+2-3分	[双方向リモート触覚ライブ]オーディオチャネルを使用したHapbeatエクスペリエンスをデモ。メインMC、審査員など一部の観客がHapbeatデバイスを装着しYouTubeライブストリーミング視聴。じゃんけんをします。
+3-4分	[安定性、互換性、および利便性] YouTube Liveパイプラインとの適合性と互換性を示す。
+4-5分	[多言語での感情との相互作用]リアルタイムの翻訳で観客の顔、拍手、歓声を分析できるリアルタイムの感情分析を使って、視覚化されたデータとリアルタイム翻訳で会場の観客全員と交流。
+5-6分	[ダンスプレイ]フィナーレ。ダンスプレイで観客を次世代のライブエンターテイメントに連れていく。
+//}
+
+その後、採択時に審査員からのフィードバックがありますが
+「この提案はまさにRTL向きだね！」という感じで、おおむね好評価。
+その後は、各要素のフィージビリティや意味合い、最終的な持ち時間（各チーム10分）にあわせて、
+パフォーマンスの構成要素を再設計していきます。
+採択からチーム編成までの期間（本番10週間前）で、VCを活用することが決定しましたので、
+9月10日ぐらいの段階でこんな感じのシナリオになりました。
+ちなみにこのような進行の構成要素と時間配分を記載した台本を「構成台本」と呼びます。
+
+//tsize[10,90]
+//table[scenario2][本番10週間前時点のシナリオ（10分）]{
+時間	内容
+-------------------------------------------------------------
+0-1分	あいさつ
+1-2分	システムについて（豪州側バーチャルキャストに日本から凸する）
+2-3分	ミルキークイーンが英語で通訳しながら直感アルゴリズムKirinが日本語、Xiが中国語（計3人）がVTuber文化とファンとのコミュニケーションについて語る
+3-6分	パオズゲーム：白井が「会場で拍手をすると画面端のメーターがあがります」と紹介。右ウイングと左ウイングで拍手がなるたびにパオズが落ちてくる。「多いほうが勝ち！」その後「笑いでも何か落ちてきます」。
+5-6分	バーチャル・ウィリアムテル：日→豪で頭上のリンゴを弓で射る。
+6-7分	六本木で開催されたTIFFのようす（VR-HMD-5Gライブの記録ビデオ）を紹介、楽曲「520」を踊りエンディング。
+//}
+
+このあと複数回の技術検証、出演者どうしのリハーサル、ゲネプロ（最終リハーサル）を通して、英語版で完成させていきます。
+
+//image[scenario][シナリオ決定稿。画像化してVC内でカンペとして表示するため1枚のPNGファイルに凝縮してある。][scale=0.5]{
+//}
+
+VTuberのシナリオを技術書で解説する機会はなかなかないのですが、最終的な台本は（アニメ声優と違って）紙の本ではなく、画像やスプレッドシートで扱われることは多いようです。
+
+=== VCI を使ったVirtual Castの拡張
+
+VCはそのバーチャル空間に独自の背景や3Dオブジェクト、またそれらにインタラクティブ性を持たせるために独自のスクリプトシステムを有しており「VCI」（Virtual Cast Interactive）と呼ばれています。
+VCIはバーチャルキャスト社公式が配布しているUnityPacageを導入してUnity上で3Dオブジェクトをセットアップし、スクリプトはLua言語を使って書くことができます。
+#@# https://virtualcast.jp/wiki/doku.php?id=vci:script:luatutorial
+
+上記のシナリオに現れる「パオズゲーム」や「バーチャル・ウイリアムテル」は、「直感アルゴリズム」番組中ではVCIを使って実装されています。
+
+//list[Confetti.lua][Confetti.lua VCで紙吹雪を降らせる]{
+#@mapfile(shirai/Confetti.lua)
+math.randomseed(os.time())
+ConfettiTarget = vci.assets.GetSubItem("ConfettiTarget")
+ConfettiTarget.SetLocalPosition(Vector3.__new(0, 1.5, 0))
+vci.assets._ALL_SetMaterialColorFromName("Transparent",
+ Color.__new(1.0, 1.0, 1.0, 0.5))
+EEConfetti = vci.assets.GetSubItem("EEconfetti")
+gen_height = 0
+size = 1
+ToumeiFlag = 0
+
+function fallConfetti()
+    local rand_xpos = math.random(0, 100) / 100
+    local rand_zpos = math.random(0, 100) / 100
+    local rand_xvel = math.random(-100, 100) / 100
+    local rand_zvel = math.random(-100, 100) / 100
+    local ConfettiTarget_pos = ConfettiTarget.GetLocalPosition()
+    print(ConfettiTarget_pos)
+    local pos = Vector3.__new(ConfettiTarget_pos.x,
+     ConfettiTarget_pos.y + gen_height, ConfettiTarget_pos.z)
+    local scale = Vector3.__new(size, size, size)
+    EEConfetti.SetLocalPosition(pos)
+    EEConfetti.SetLocalScale(scale)
+    vci.assets.GetEffekseerEmitter("EEconfetti")._ALL_Play()
+end
+
+function update()
+    if vci.me.GetButtonInput(1) then
+        fallConfetti()
+    end
+    if vci.me.GetAxisInput().y == 1 then
+        print("enableLEDmeter")
+    end
+    if vci.me.GetAxisInput().y == -1 then
+        print("disableLEDmeter")
+    end
+end
+
+function onUse(use)
+    if use == "ConfettiTarget" then
+        if ToumeiFlag == 0 then
+            vci.assets._ALL_SetMaterialColorFromName(
+                "Transparent", Color.__new(1.0, 0, 1.0, 0.0))
+            ToumeiFlag = 1
+        end
+    end
+end
+#@end
+//}
+
+コード的にはLuaなのでこんなかんじです（例として紙吹雪を降らせるコードになります）。
+
+なお、VC自体の設計思想は「VR」というよりは
+「HMDを使って演じるバーチャルな3Dキャラクターによる放送局のためのシステム」ですので、
+VCIは主にグラフィックスについてのインタラクション、具体的にはシーングラフと衝突、ユーザーによるグラブアクションなどが取得できますが、
+外部システムやデバイスとの通信はできません。
+この先は必要に応じて色々な魔改造?を施していくことになります。
+
+== 実装と解説
+
+シナリオと技術的な実装要素を図にするとこんなかんじになります。
+メインMCのハードウェア装備は、（1）背中にOMEN X、（2）HMDはOculus S（会場の設営コストと安定性を配慮して）、（3）肩の左右に触覚提示をわかりやすくするインジゲーター、（4）胸にHapbeat-Duo（HMDのオーディオ出力からベルトにアンプを接続）、（5）電飾を制御するM5Stack、という構成になります。
+
+//image[SA19-scenario][（左）シナリオと技術的な実装要素／（右）筆者・メインMCのハードウェア装備(SA19RTLeq.png)]{
+//}
+
+本会場でのPC構成は主に3台。メインMC用のOMEN、会場音響を分析するMicPC、そして会場音響からOBSを使って盛り上がり分析画像をグラフィックスとして付加するMain、さらに東京側には各出演者に1台づつVC端末が用意されています。
+続いて、個々の技術についての実装紹介になります。
+
+=== 会場音声分析からのギフト送信
+まず、会場音声分析からのギフト送信を解説します。
+会場の歓声や拍手、笑いなどによって、VCIのアイテム（パオズ、紙吹雪など）をバーチャルギフトとして降らせることがゴールです。
+
+会場の音響を分析する音響分析用PC（GPD Pocket2、以下MicPC）を用意し、Python環境で開発した音声分析システムを使い、その分析結果をWebSocketを扱うことができるNode.jsのライブラリ「Socket.IO」を使ってJSON形式にて送受信させます。
+
+会場からの音声分析系はラボのインターン、栢之間 諒汰さん（東工大2年生）が中心になってPythonによる音響分析を実装しています（感謝）。
+VCIや Node、M5Stackなどの実装は同じくラボのインターン、山崎 勇祐さん（東工大 博士学生／Hapbeat代表でもある）が中心になって実装をしています（大感謝）。
+いろんなノウハウがあるのですが、シンプルにコードで表現するとこんな感じです。
+
+//list[judgeSet.py][judgeSet.py（main.pyに呼び出される）]{
+def realtime_sub(signal, fs):
+    mfcc = an.mfcc(signal, fs)
+    stft = an.stft(signal)
+    applause = an.find_largeapplause(mfcc, threshold[0])
+    laugh = an.find_laugh(mfcc, threshold[1])
+    excitement = an.excitement_base(stft)
+    return [applause, laugh, excitement]*coefficients
+//}
+
+ライブラリは PyAudioと librosa が主に使われています。
+STFTは short-time Fourier transform 、短時間フーリエ変換です。
+MFCCはメル周波数ケプストラム係数（Mel-Frequency Cepstrum Coefficients）という
+聴覚フィルタに基づく音響分析手法で、人間の聴覚特性にあわせたフィルタバンクを使って高速に音響の特徴を抽出できます。
+結果として applause, laugh, excitement つまり、拍手のような喝采、笑いと興奮を抽出します。単純に拍手だけ判定することも可能です。
+
+上記のアルゴリズムを共通にして、各システムの通信は Node.js を使って行います。
+
+//list[MicPC-index.js][MicPCで走る Node.js スクリプト index.jsより抜粋]{
+const { PythonShell } = require('python-shell'); //pythonをnodeから起動する
+const socketio = require('socket.io')
+app.use(express.static('public'));
+const expressServer = app.listen(3000); 
+const io = socketio(expressServer); 
+var python_script_path = '../../EmotionAnalysis/'; //実行するアルゴリズムの場所
+
+let pyEmoAnalysis = new PythonShell(
+    'main.py', { mode: 'text', pythonOptions: ['-u'],
+    scriptPath: python_script_path });
+
+//EmoAnalysisからデータが飛んで来たら実行
+pyEmoAnalysis.on('message', data => {
+    obj = JSON.parse(data)
+    console.log(obj)
+    // client側にデータを送信
+    io.emit('send_EmoAna_Result', obj) 
+})
+//}
+
+Socket接続をし、上記index.jsから送られてきた解析結果を同Socketに存在する別のclientに送信します。
+何らかのブラウザで指定のURL（http://localhost:3000）を開き、localのindex.jsと接続するためのSocketを作っています。
+
+//list[client.js][MicPCで走る Node.js スクリプト client.js より抜粋]{
+const LocalSocket = io.connect('http://localhost:3000');
+const MainSocket = io.connect('https://main.jp.ngrok.io/');
+const OMENSocket = io.connect('https://omen.jp.ngrok.io/');
+
+// index.jsから送られてきた解析結果をそのまま接続されているsocketのclientに送る
+LocalSocket.on('send_EmoAna_Result', (obj) => {
+    console.log(obj)
+    MainSocket.emit('send_EmoAna_Result', obj)
+    OMENSocket.emit('send_EmoAna_Result', obj)
+})
+//}
+
+#@# //cmd{node index.js//}
+
+Main,OMENそれぞれのPCで node index.js を起動し（おススメは VS Code のコンソールで投入します）、ブラウザでURLを入力することで、各PC上で必要となる可視化や通信が行われる仕組みになっています。
+
+=== VCI と node.js を使ったVirtual Castの拡張
+
+前述のとおり、VCおよびVCIには外部システムとの通信機能はありませんが、唯一、デバッグ情報をWebSocketで受け取ることができます。
+oocytanbさんの vci-logcat というプロジェクト（
+@<href>{https://github.com/oocytanb/vci-logcat}
+）が詳しいのでここでの詳説は割愛します。
+こちらを使ってVCI→他のシステムへの通信はWebSocket通信を使って実装します。
+
+逆に他のシステム→VCIへのイベントは、キーボード信号を使って実装することにします。
+具体的には pyAutokey という Pythonライブラリを使って、VCを使っているMainPCにキーイベントを発生させて、MainPC上のVC側ではそのキーイベントを拾います。
+
+//list[MainPCindex.js-key][MainPCで走る自動マウス＆キー操作処理（ Node.js ）]{
+let pyAutoKey = new PythonShell('autokey.py',
+ { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
+// 自動キー入力を行う閾値
+var Hi_Threshold = 0.7
+var Lo_Threshold = 0.4
+
+//io.on→socketが接続されたとき起動
+io.on('connection', (socket) => {
+    // 解析結果が飛んで来たら実行
+    socket.on('send_EmoAna_Result', (obj) => {
+        var Applause_fromMax = 0.13
+        var Laugh_fromMax = 0.02
+        // まず得られた解析結果を0 ~ 指定した最大値の範囲（範囲A）に限定する。
+        // その後、範囲Aを0~1の範囲にマッピングする
+        obj.L_L = map(value_limit((obj.L_L - 0.001), 0,
+		 Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
+        obj.L_A = map(value_limit((obj.L_A - 0.04), 0,
+		 Applause_fromMax), 0, Applause_fromMax, 0, 1)
+        // マッピング後の解析結果が閾値を超えたらマウスを(100,100)に動かし、
+		// 指定のキー入力を動作させる
+        if (obj.L_L > Hi_Threshold) {
+            pyAutoKey.send(String(2))
+        } else if (Lo_Threshold < obj.L_L && obj.L_L < Hi_Threshold) {
+            pyAutoKey.send(String(2))
+        } else {
+            pyAutoKey.send(String(4))
+        }
+        if (obj.L_A > Hi_Threshold) {
+            pyAutoKey.send(String(1))
+        } else if (Lo_Threshold < obj.L_A && obj.L_A < Hi_Threshold) {
+            pyAutoKey.send(String(1))
+        } else {
+            pyAutoKey.send(String(3))
+        }
+     });
+});
+//}
+
+キーボード入力の[1]が紙吹雪、[2]がパオズ、[3]、[4]がVCI内のHapbeat（に似せた3Dオブジェクト）の帯の色を変更します。
+なおこのpyAutokeyを起動後はマウスとキー入力を奪われるので、本番以外はコメントアウト推奨です。
+止めたいときは、Alt + Ctrl + Delete を押せば止まりますが、知らない人が触るとパニックになります。
+
+//list[MainPCindex.js-py][MainPCで走る自動マウス＆キー操作処理（ Python ）]{
+import pyautogui as pgui
+
+def testKey(key):
+    pgui.click(100, 100)
+    pgui.typewrite(key)
+
+def main():
+    while True:
+        key = input()
+        if key == "1" or key == "2" or key == "3" or key == "4":
+            testKey(key)
+
+if __name__ == "__main__":
+    main()
+//}
+
+以上のようなキーボードをハックする処理は、複数のシステムに横断する処理をどうしてもネットワークで実装できない場合（他には共有ファイルの書き込みなどでも実装できない場合）の最終手段としての実装になりますが、
+USBキー入力を発呼できるフットスイッチなどもAmazonで入手できますのでシステム化するときにも便利です。
+意外とVRエンタメシステムやVTuberなどのスタジオ技術の実装ノウハウとしては覚えておくといいかもしれません。
+
+またこの手のキーボード入力はデバッグするときも便利ですが、本番ではチートになりますので注意です。
+あくまでデバッグという扱いで、本番に向けてちゃんと動くための実験をしていきます。
+充分なテストをしておかないと、逆に本番では「人間では押せないぐらいの連打スピードで信号が来た！キーボードバッファが！」なんてことも当然にして起きますので、そちらも注意が必要です。
+
+=== M5Stackによる触覚の可視化
+
+筆者が背負っているPC（HP OMENX）の中で動いている Node.js サーバのコード（index.js）はこんなかんじです。
+MicPCから送られてきた解析結果をマッピングして、VCのデバッグ情報をWebsocketで受け取ります。
+それらの値をトリガーとして、M5Stackにシリアル通信でコマンドを送りLEDを光らせます。
+
+なお、すべてクラウド環境で動作したい設計なので、ngrok（エングロック）を使ってトンネル化し、
+ローカル環境上で実行しているアプリケーションの通信をインターネット経由で動作するようにしています。
+これは会場のネットワーク、特にWifiアクセスポイントが数千人の規模で有視界距離にいるような
+国際イベントではまともに動作しないことを想定し、LTE等の公衆回線を使ってモバイルで分散させる状況を想定した設計になっています。
+
+//list[OMEN-index.js1][ngrok起動(node module使用)]{
+const express = require('express');
+var app = express();
+const PORT = process.env.PORT || 4000
+var server = app.listen(PORT, () => {
+    console.log('listening to requests on port ' + PORT)
+});
+
+const ngrok = require('ngrok')
+
+connectNgrok().then(url => {
+    console.log('URL : ' + url);
+});
+async function connectNgrok() {
+    let url = await ngrok.connect({
+        addr: 4000, // port or network address, defaults to 80
+        subdomain: 'omen', // reserved tunnel name https://alex.ngrok.io
+        authtoken: '***', // ngrok.com からのトークンを設定
+        region: 'au'', // one of ngrok regions (us, eu, au, ap), defaults to us
+    });
+    return url;
+}
+//}
+
+ngrokにはオーストラリアのリージョンがありますので実際の環境に近い動作速度をテストできます。
+
+さてM5Stackは320 x 240 TFTカラーディスプレイ、microSDカードスロット、スピーカーを備えたコンパクトで便利なESP32搭載のIoT開発モジュールです。さらに専用の拡張モジュールを縦に積み重ねていくことで機能を追加することができ
+Wi-FiやBluetooth通信を扱え、ArduinoやMicroPython環境での開発が可能です。
+
+今回はこのM5StackのArduiono環境を使って、背中に背負ったOMEN-PCの中で動くVirtualCastから、Node.js を通してUSB-Cシリアル通信経由で24個のフルカラーLED x 2系統の点灯を制御します。
+中々優秀なのですが、通信を文字で行うと流石に重たくLEDが美しくアニメーションして光ってくれないので、intをうまく使って、衝突や触覚ハグによるドキドキ感、笑いや拍手、ウイリアムテル・ゲームでリンゴが命中した時など、3種類の点灯モードと強度を詰め込んでいきます。
+
+//list[OMEN-index.js2][VCからのメッセージを送ってM5StackでLEDを光らせる index.js]{
+// Socket setup
+var L_Top2Bot = 200 //数字の説明：xyz, y = 左右（左＝0、右＝1）
+R_Top2Bot = 210
+L_Bot2Top = 201
+R_Bot2Top = 211
+L_Center2Edge = 202
+R_Center2Edge = 212
+L_Edge2Center = 203
+R_Edge2Center = 213
+L_MeterLED = 204
+R_MeterLED = 214
+Random_Rainbow = 205
+HandShaked = 206
+hit2body = 207
+Start_HB = 250
+Stop_HB = 251
+
+var LED_Mode = 1; //LEDが光るモード。0にすると拍手・笑いをdisable
+
+let pySendSerial = new PythonShell('sendserial.py',
+ { mode: 'text', pythonOptions: ['-u'], scriptPath: './' });
+pySendSerial.on('message', data => {
+    console.log(data)
+})
+
+// VCからのメッセージ(print())を受け取りM5Stackにシリアル通信を行う
+const vci_logcat = require('./vci-logcat/bin/vci-logcat')
+var vci = vci_logcat.vciEmitter
+vci.on('print', (arg) => {
+    console.log(arg);
+    if (arg == 'hit2apple') {
+        pySendSerial.send(String(Random_Rainbow))
+    }
+    if (arg == 'hit2body') {
+        pySendSerial.send(String(hit2body))
+    }
+    if (arg == 'HugOn') {
+        pySendSerial.send(String(Start_HB)) //鼓動表現。一定の周期で光らせる
+    }
+    if (arg == 'HugExit') {
+        pySendSerial.send(String(Stop_HB)) //
+    }
+    if (arg == 'enableLEDmeter') { // 笑い、拍手にLEDを反応させる
+        LED_Mode = 1
+        console.log("enabled")
+    }
+    if (arg == 'disableLEDmeter') { // 笑い、拍手にLEDが反応させない
+        LED_Mode = 0
+        console.log("disabled")
+    }
+    if (arg == 'Handshaked') {
+        pySendSerial.send(String(HandShaked))
+    }
+})
+
+// 値の範囲を変換する関数。例：(5,0,10,0,100) => return 50
+const map = (value, fromMin, fromMax, toMin, toMax) => {
+    let result = 0;
+    result = (value <= fromMin)
+        ? toMin : (value >= fromMax)
+            ? toMax : (() => {
+                let ratio = (toMax - toMin) / (fromMax - fromMin);
+                return (value - fromMin) * ratio + toMin;
+            })();
+    return result;
+};
+
+// 値の範囲をmin~maxの間で制限する関数。例：(5,0,4) => return 4
+function value_limit(val, min, max) {
+    return val < min ? min : (val > max ? max : val);
+}
+
+// 音響解析結果の値をLEDの数に再マップし,intに直してM5Stackに送信する
+io.on('connection', (socket) => {
+    socket.on('send_EmoAna_Result', (obj) => {
+        // mapするときの最大値を決定。最大値との比率で値を決める
+		// （設定した最大値以上で１、それ以外は0~1）
+        var Applause_fromMax = 0.13
+        var Laugh_fromMax = 0.02
+        obj.L_L = map(value_limit((obj.L_L - 0.001), 0,
+		 Laugh_fromMax), 0, Laugh_fromMax, 0, 1)
+        obj.L_A = map(value_limit((obj.L_A - 0.04), 0,
+		 Applause_fromMax), 0, Applause_fromMax, 0, 1)
+        console.log(obj);
+        io.emit('tc2client', obj)
+        //EmoAnaから入ってきた0~1の解析結果をLEDの数（0~28）に再マップ
+        L_L_barheight = Math.round(map(obj.L_L, 0, 1, 0, 28))
+        L_A_barheight = Math.round(map(obj.L_A, 0, 1, 0, 28)) + 30
+
+        pySendSerial.send(String(L_L_barheight))
+        pySendSerial.send(String(L_A_barheight))
+
+        pySendSerial.send(String(L_MeterLED))
+        pySendSerial.send(String(R_MeterLED))
+    });
+})
+//}
+
+会場で笑いや拍手が起きると、両脇のカラーLEDが3種類のパターンでカラフルに明滅します。
+実際、演者はHMDを装着しており、会場のリアクションに反応することは難しいのですが、これによって触覚とLEDが双方向性を与えてくれます。
+なお、ステージや会場の遠くからの視認性を確認するために、ハロウィン前夜の六本木ヒルズで実験したりしました。
+#@# //image[SA18-2355][SIGGRAPH ASIA 2018 TokyoでのReal-Time Live!の様子（SA公式提供）][scale=0.5]{
 #@end
 
 
@@ -239,7 +657,7 @@ SA19公式のトレイラーにも収録されたりもしました（@<href>{ht
 特に日豪同時公開リハーサルを11月17日現地時間12～16時（日本11～15時）に実施し、日本での取材対応などこなしながら
 ひたすらダンスの練習（オリジナル振付）、
 そのまま羽田空港からオーストラリアのフライトへ。
-機材がクソ重い、さらに真冬のコートで移動して、オーストラリアについてみれば現地は真夏のクリスマス。体力が削られるだけでなく、ホリデーな雰囲気に精神も削られます。
+スーツケース2箱にまたがる機材がとても重い、さらに真冬のコートで移動して、オーストラリアについてみれば現地は真夏のクリスマス。体力が削られるだけでなく、ホリデーな雰囲気に精神も削られます。
 
 現地ではリハを受け取ってくれた先発隊と合流し、11月20日11～13時が最終リハーサル、その後13～15時が別の上映があり会場閉め切り、
 さらに15～16時が本番準備、そして16～18h時が本番ライブ（日本時間15-17時）という流れでした。
@@ -322,7 +740,60 @@ HMD越しでしたが、会場の笑いや拍手からも、観客との一体�
 
 
 #@mapfile(shirai/shirai-working.re)
+#@# ToDo: ファイルを分割して終わった箇所と書きかけの箇所を分離する
+#@# である調→ですます調のほうがいい感じがするので統一
+#@# 参考文献が本文中でうまく参照できていない感じだけど、本文が冗長になることを避けたいのでできるだけ引用で済ます方針。
+#@# ファイルの分割について https://blog.kakeragames.com/2019/12/02/split-re-view-file.html
+#@# = working
+
+
 #@end
 
 #@mapfile(shirai/column.re)
+
+====[column] Re:view環境で技術書を書く
+
+筆者の白井です。
+本稿を書くにあたり、Re:view環境初体験となりました。
+
+普段はOverLeafなどのクラウドLaTeX環境で執筆することが多い私です
+（日本語の論文ではない書物、技術書は久しぶりに書きました！）。
+
+かつて、自分の書籍「WiiRemoteプログラミング」（2009年刊行）はXMLで書いていた時期もありました。
+論文はTeX、紙の書籍を書くためにはText、Blogなどが全盛でしたし、ePubにもしたかった。
+でも、XMLはタグ打ちの面倒くささが執筆の足を止めます（Markdownはまだありませんでした）TeXのほうがはるかに楽。
+自分の研究室では卒論集を Cloud LaTeX や Github で管理していたのですが、ビルド環境までクラウド化するのは中々大変でした。
+今回の技術書典部執筆をきっかけにいろいろ勉強になりました！
+
+本書は幹事著者の樋口さんらにより Github上にRe:VIEW で執筆環境を構築されておりますので、Github上で自分のブランチのpublishをしてプルリクエストさえ出せれば、あとはCircleCIがRe:VIEW → TeX → PDFまでコンパイルしてくれちゃいます。
+
+画像ファイルの追加なども Visual Studio Onlineなら簡単にアップロードしてリポジトリに追加できてしまいますので、学生さんの卒論等にも便利なのではないかと思いました。
+
+一方で、最初の一歩は「えー寄稿するのに環境までつくるの？」と、若干大変でした。
+最初はWindowsにDocker環境を構築しようとしてジタバタいたのですが、執筆のためだけにあれこれインストールするのに疲れました…。
+なんだかんだいってDockerはMacが便利です。
+GithubのURLからiPadのブラウザで編集するなんてことも試してみました。
+最近のiPadOSはZIPファイルもスンナリ解凍できるし…これはこれで結構快適な技術書ライフが送れそうです（書かない理由が減っていく）。
+
+あとは面白いところでは、
+このブラウザ版VSCode（正式名称はVisual Studio Online，@<href>{https://online.visualstudio.com/}
+）でも執筆可能でした。
+こちらはAzureのアカウントが必要ですが、無料枠で十分な感じです。
+
+ホント樋口さん 環境構築ありがとうございました！！
+
+最後の最後に。
+書いたものが自分の書籍になる技術書展は尊いです
+会社だと広報チェックとかのプロセスはありますが
+自分の意志とは関係ないところで
+生み出したものが曲げられたり変えられたり
+日の目を見なかったりすることに比べれば
+共有知にする努力ははるかに尊いと思います。
+
+大学生の卒論をたくさん指導してきましたが、
+これは大きな学びでした。また機会があれば筆を振るいたいと思います！
+
+（白井暁彦）
+====[/column]
+
 #@end
