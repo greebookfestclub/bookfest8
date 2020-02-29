@@ -11,7 +11,11 @@ jobs:
     - uses: actions/checkout@v1
     - name: build PDF
       uses: mahiguch/review-pdf-generator-action@master
+    - name: mkdir
+      run: mkdir /home/runner/work/bookfest8/bookfest8/build/
+      shell: bash
+    - name: copy an artifact for upload
+      run: cp /home/runner/work/bookfest8/bookfest8/articles/GREE-BookFest8.pdf /home/runner/work/bookfest8/bookfest8/build/output.pdf
+      shell: bash
     - name: upload as Artifacts
       uses: mahiguch/review-pdf-generator-action/upload-artifact@master
-      env:
-          INPUT_PATH: articles/GREE-BookFest8.pdf
