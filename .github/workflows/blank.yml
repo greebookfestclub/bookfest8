@@ -11,11 +11,5 @@ jobs:
     - uses: actions/checkout@v1
     - name: build PDF
       uses: mahiguch/review-pdf-generator-action@master
-    - name: mkdir
-      run: mkdir build
-      shell: bash
-    - name: copy an artifact for upload
-      run: cp articles/GREE-BookFest8.pdf build/output.pdf
-      shell: bash
     - name: upload as Artifacts
       uses: mahiguch/review-pdf-generator-action/upload-artifact@master
