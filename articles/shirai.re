@@ -5,6 +5,7 @@
 #@# ファイルの分割について https://blog.kakeragames.com/2019/12/02/split-re-view-file.html
 #@# shirai-done.re: 書き終わり、校正中。
 #@# shirai-working.re: 書きかけ、校正前。
+
 = Virtual CastとHapbeatを使った国際双方向アバター触覚ライブの開発
 #@# mapfile(shirai/shirai-done.re)
 
